@@ -115,7 +115,7 @@ class RoleController extends AbstractActionController {
         $form = new Form('role');
         $form
                 ->setAttribute('class', 'form-horizontal')
-                ->setHydrator(new DoctrineHydrator($this->getOM()))
+                ->setHydrator(new DoctrineHydrator($this->getOM(), $config['roleEntity']))
                 ->setObject($role)
                 ->add(array(
                     'name' => 'roleId',

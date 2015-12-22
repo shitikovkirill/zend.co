@@ -151,7 +151,7 @@ class CrudController extends AbstractActionController {
         $form = new Form('user');
         $form
                 ->setAttribute('class', 'form-horizontal')
-                ->setHydrator(new DoctrineHydrator($this->getOM()))
+                ->setHydrator(new DoctrineHydrator($this->getOM(), $config['userEntity']))
                 ->setObject($user)
                 ->add(array(
                     'name' => 'displayName',
