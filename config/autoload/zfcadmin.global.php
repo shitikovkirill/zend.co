@@ -39,7 +39,7 @@ $settings = array(
  */
 return array(
     'zfcadmin' => $settings,
-   
+
     /**
      * Default BjyAuthorize configuration for ACL
      */ 
