@@ -25,6 +25,61 @@ return array(
     ),
     'router' => array(
         'routes' => array(
+            'zfcadmin' => array(
+                'child_routes' => array(
+                    'zfc-user-crud' => array(
+                        'type' => 'segment',
+                        'options' => array(
+                            'route' => '/users[/:action][/:id]',
+                            'defaults' => array(
+                                'controller' => 'ZfcUserCrud\Controller\Crud',
+                                'action' => 'index',
+                            ),
+                        ),
+                    ),
+                ),
+            ),
+            'zfc-user-crud' => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route' => '/admin/users[/:action][/:id]',
+                    'defaults' => array(
+                        '__NAMESPACE__' => 'ZfcUserCrud\Controller',
+                        'controller' => 'Crud',
+                        'action' => 'index',
+                    ),
+                ),
+                'may_terminate' => true,
+            ),
+            'zfc-user-crud-password' => array(
+                'type' => 'literal',
+                'options' => array(
+                    'route' => '/admin/password',
+                    'defaults' => array(
+                        '__NAMESPACE__' => 'ZfcUserCrud\Controller',
+                        'controller' => 'Crud',
+                        'action' => 'password',
+                    ),
+                ),
+                'may_terminate' => true,
+            ),
+            'zfc-user-crud-role' => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route' => '/admin/roles[/:action][/:id]',
+                    'defaults' => array(
+                        '__NAMESPACE__' => 'ZfcUserCrud\Controller',
+                        'controller' => 'Role',
+                        'action' => 'index',
+                    ),
+                ),
+                'may_terminate' => true,
+            ),
+        ),
+    ),
+    /*
+    'router' => array(
+        'routes' => array(
             'zfc-user-crud' => array(
                 'type' => 'Segment',
                 'options' => array(
@@ -63,6 +118,7 @@ return array(
             ),
         ),
     ),
+    //*/
     'view_manager' => array(
         'template_path_stack' => array(
             'ZfcUserCrud' => __DIR__ . '/../view',
