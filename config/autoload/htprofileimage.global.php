@@ -12,7 +12,7 @@ $settings = [
      * Please set directory where user images will be uploaded.
      * Donot forget to set appropriate permission for that directory
      */
-    //'upload_directory' => 'data/uploads/profile-images',
+    'upload_directory' => 'data/uploads/profile-images',
 
     /**
      * Storage Filter

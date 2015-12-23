@@ -28,7 +28,7 @@ $options = [
      * Default: Empty array|array()
      * Accepted values: array containing folders or directories
      */
-    'img_source_path_stack' => ['data/images/'],
+    'img_source_path_stack' => ['data/uploads/images/'],
 
     /**
      * Image Source Map
