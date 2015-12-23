@@ -37,8 +37,9 @@ return array(
                     'ZfcUserCrud\Controller\Crud',
                     'ZfcUserCrud\Controller\Role'), 'roles'=>'admin'),
 
-                array('controller' => 'Application\Controller\Index', 'roles' => array()),
-                array('controller' => 'Application\Controller\Index', 'roles' => array()),
+                array('controller' => 'HtProfileImage\ProfileImage', 'roles' => array()),
+                array('controller' => 'HtImgModule\Controller\ImageController', 'roles' => array()),
+
                 array('controller' => 'Application\Controller\Index', 'roles' => array()),
                 array('controller' => 'Application\Controller\Index', 'roles' => array()),
                 array('controller' => 'Application\Controller\Index', 'roles' => array()),

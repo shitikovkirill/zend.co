@@ -10,6 +10,7 @@ return array(
     'modules' => array(
         'ZendDeveloperTools',
         'HtImgModule',
+        'HtProfileImage',
         'DoctrineModule',
         'DoctrineORMModule',
         'ZfcBase',

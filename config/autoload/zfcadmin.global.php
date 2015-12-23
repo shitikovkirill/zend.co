@@ -51,14 +51,20 @@ return array(
                 array('route' => 'zfc-user-crud', 'roles' => array('admin')),
                 array('route' => 'zfc-user-crud-role', 'roles' => array('admin')),
 
-                /// Othe
+                ///
                 array('route' => 'home', 'roles' => array()),
-
                 array('route' => 'zfcuser', 'roles' => array()),
-                array('route' => 'zfcuser/logout', 'roles' => array('user','admin')),
+
+
                 array('route' => 'zfcuser/login', 'roles' => array('guest')),
-                array('route' => 'zfcuser/register', 'roles' => array('admin')),
-                array('route' => 'zfc-user-crud-role', 'roles' => array('admin')),
+                array('route' => 'zfcuser/register', 'roles' => array('guest')),
+
+                array('route' => 'zfcuser/logout', 'roles' => array('user','admin')),
+
+                array('route' => 'htimg', 'roles' => array()),
+                array('route' => 'zfcuser/htimageupload', 'roles' => array()),
+                array('route' => 'home', 'roles' => array()),
+                array('route' => 'home', 'roles' => array()),
             ),
         ),
     ),
