@@ -19,6 +19,7 @@ return array(
         'ZfcAdmin',
         'ZfcTwig',
         'ZfcUserCrud',
+        'MyUser',
         'Application',
     ),
 

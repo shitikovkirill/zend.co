@@ -2,8 +2,8 @@
 
 return array(
     'zfcusercrud' => array(
-        'userEntity' => 'ZfcUserCrud\Entity\User',
-        'roleEntity' => 'ZfcUserCrud\Entity\Role'
+        'userEntity' => 'MyUser\Entity\User',
+        'roleEntity' => 'MyUser\Entity\Role'
     ),
     'doctrine' => array(
         'driver' => array(

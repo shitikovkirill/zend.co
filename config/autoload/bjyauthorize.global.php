@@ -8,7 +8,7 @@ return array(
             // using an object repository (entity repository) to load all roles into our ACL
             'BjyAuthorize\Provider\Role\ObjectRepositoryProvider' => array(
                 'object_manager'    => 'doctrine.entity_manager.orm_default',
-                'role_entity_class' => 'ZfcUserCrud\Entity\Role',
+                'role_entity_class' => 'MyUser\Entity\Role',
             ),
         ),
         'guards' => array(
@@ -36,6 +36,16 @@ return array(
                 array('controller'=>array('ZfcAdmin\Controller\AdminController',
                     'ZfcUserCrud\Controller\Crud',
                     'ZfcUserCrud\Controller\Role'), 'roles'=>'admin'),
+
+                array('controller' => 'Application\Controller\Index', 'roles' => array()),
+                array('controller' => 'Application\Controller\Index', 'roles' => array()),
+                array('controller' => 'Application\Controller\Index', 'roles' => array()),
+                array('controller' => 'Application\Controller\Index', 'roles' => array()),
+                array('controller' => 'Application\Controller\Index', 'roles' => array()),
+                array('controller' => 'Application\Controller\Index', 'roles' => array()),
+                array('controller' => 'Application\Controller\Index', 'roles' => array()),
+                array('controller' => 'Application\Controller\Index', 'roles' => array()),
+                array('controller' => 'Application\Controller\Index', 'roles' => array()),
                
             ),
         ),
