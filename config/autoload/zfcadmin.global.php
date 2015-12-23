@@ -63,6 +63,16 @@ return array(
 
                 array('route' => 'htimg', 'roles' => array()),
                 array('route' => 'zfcuser/htimageupload', 'roles' => array()),
+
+
+
+                array('route' => 'htimageupload', 'roles' => array()),
+                array('route' => 'htimagedisplay', 'roles' => array()),
+                array('route' => 'htimagedelete', 'roles' => array()),
+
+                array('route' => 'home', 'roles' => array()),
+                array('route' => 'home', 'roles' => array()),
+                array('route' => 'home', 'roles' => array()),
                 array('route' => 'home', 'roles' => array()),
                 array('route' => 'home', 'roles' => array()),
             ),
