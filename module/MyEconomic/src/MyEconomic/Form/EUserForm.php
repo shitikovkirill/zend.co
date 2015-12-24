@@ -63,5 +63,9 @@ class EUserForm extends Form
                 'class' => 'btn btn-sm btn-success'
             ),
         ));
+
+        if(!empty($eUser->getId())){
+            $this->bind($eUser);
+        }
     }
 }

@@ -1,35 +1,38 @@
 <?php
 namespace MyEconomic\Controller;
 
-use MyUser\Form\EUserForm;
+use MyEconomic\Entity\EconomicUser;
+use MyEconomic\Form\EUserForm;
 use Zend\Mvc\Controller\AbstractActionController;
-use MyUser\Entity\EconomicUser;
-use MyUser\Entity\Turnover;
+use MyEconomic\Entity\Turnover;
 
 class IndexController extends AbstractActionController
 {
-    public function indexAction()
+    public function indexAction(){
+
+    }
+    public function adduserAction()
     {
-        $entityManager = $this->getServiceLocator()
-            ->get('doctrine.entitymanager.orm_default');
-//        $eUser = new EconomicUser();
-        $user = $entityManager->getRepository('MyUser\Entity\User')->find(1);
-        $eUser = $entityManager->getRepository('MyUser\Entity\EconomicUser')->find(1);
-//        $eUser ->setUser($user);
-//        $entityManager->persist($eUser);
-//        $entityManager->flush();
-
-
         $translator = $this->getServiceLocator()->get('translator');
-        $form = new EUserForm($eUser);
+        $yearntityManager = $this->getServiceLocator()
+            ->get('doctrine.entitymanager.orm_default');
+
+        $user = $this->zfcUserAuthentication()->getIdentity();
+        $economicUser = $yearntityManager->getRepository('MyEconomic\Entity\EconomicUser')->findOneBy(array('user'=>$user));
+        if(empty($economicUser)){
+            $economicUser = new EconomicUser();
+        }
+
+
+        $form = new EUserForm($economicUser);
 
         if ($this->getRequest()->isPost()) {
             $form->setData($this->getRequest()->getPost());
             if ($form->isValid()) {
-                $economicUser = $form->getData();
-                $economicUser->setUser($user);
-                $entityManager->persist($economicUser);
-                $entityManager->flush();
+                $yearconomicUser = $form->getData();
+                $yearconomicUser->setUser($user);
+                $yearntityManager->persist($yearconomicUser);
+                $yearntityManager->flush();
                 $this->flashMessenger()->addSuccessMessage($translator->translate('E-conomic User saved'));
                 //$this->redirect()->toRoute('');
             }
@@ -40,23 +43,23 @@ class IndexController extends AbstractActionController
         );
     }
 
-    public function xxxAction()
+    public function getdataAction()
     {
         //try {
-        $wsdlUrl = 'https://api.e-conomic.com/secure/api1/EconomicWebservice.asmx?WSDL';
+        $wsdlUrl = $this->getServiceLocator()->get('url_api');
 
         $client = new \SoapClient($wsdlUrl, array("trace" => 1, "exceptions" => 1));
 
-        $entityManager = $this->getServiceLocator()
+        $yearntityManager = $this->getServiceLocator()
             ->get('doctrine.entitymanager.orm_default');
 
-        $eUser = $entityManager->getRepository('MyUser\Entity\EconomicUser')->find(1);
-        $user = $entityManager->getRepository('MyUser\Entity\User')->find(1);
+        $yearUser = $yearntityManager->getRepository('MyEconomic\Entity\EconomicUser')->find(1);
+        $user = $yearntityManager->getRepository('MyUser\Entity\User')->find(1);
 
         $client->Connect(array(
-            'agreementNumber' => $eUser->getAgreementNumber(),
-            'userName' => $eUser->getUsername(),
-            'password' => $eUser->getPassword()));
+            'agreementNumber' => $yearUser->getAgreementNumber(),
+            'userName' => $yearUser->getUsername(),
+            'password' => $yearUser->getPassword()));
 
         $accYears = $client->AccountingPeriod_GetAll()->AccountingPeriod_GetAllResult->AccountingPeriodHandle;
         $accPeriodData = $client->AccountingPeriod_GetDataArray(array('entityHandles' => $accYears))->AccountingPeriod_GetDataArrayResult;
@@ -83,33 +86,33 @@ class IndexController extends AbstractActionController
         $turnover2016 = array();
         foreach ($accountPeriods as $period) {
             if ($period['Year'] == '2011') {
-                $tmp['sub'] = substr($period['FromDate'], 5, 2);
-                $tmp['turnover'] = abs(array_sum($client->Account_GetEntryTotalsByDate(array('accounts' => $accs->AccountHandle, 'first' => $period['FromDate'], 'last' => $period['ToDate']))->Account_GetEntryTotalsByDateResult->decimal));
+                //$tmp['sub'] = substr($period['FromDate'], 5, 2);
+                $tmp = abs(array_sum($client->Account_GetEntryTotalsByDate(array('accounts' => $accs->AccountHandle, 'first' => $period['FromDate'], 'last' => $period['ToDate']))->Account_GetEntryTotalsByDateResult->decimal));
                 array_push($turnover2011, $tmp);
             }
             if ($period['Year'] == '2012') {
-                $tmp['sub'] = substr($period['FromDate'], 5, 2);
-                $tmp['turnover'] = abs(array_sum($client->Account_GetEntryTotalsByDate(array('accounts' => $accs->AccountHandle, 'first' => $period['FromDate'], 'last' => $period['ToDate']))->Account_GetEntryTotalsByDateResult->decimal));
+                //$tmp['sub'] = substr($period['FromDate'], 5, 2);
+                $tmp = abs(array_sum($client->Account_GetEntryTotalsByDate(array('accounts' => $accs->AccountHandle, 'first' => $period['FromDate'], 'last' => $period['ToDate']))->Account_GetEntryTotalsByDateResult->decimal));
                 array_push($turnover2012, $tmp);
             }
             if ($period['Year'] == '2013') {
-                $tmp['sub'] = substr($period['FromDate'], 5, 2);
-                $tmp['turnover'] = abs(array_sum($client->Account_GetEntryTotalsByDate(array('accounts' => $accs->AccountHandle, 'first' => $period['FromDate'], 'last' => $period['ToDate']))->Account_GetEntryTotalsByDateResult->decimal));
+                //$tmp['sub'] = substr($period['FromDate'], 5, 2);
+                $tmp = abs(array_sum($client->Account_GetEntryTotalsByDate(array('accounts' => $accs->AccountHandle, 'first' => $period['FromDate'], 'last' => $period['ToDate']))->Account_GetEntryTotalsByDateResult->decimal));
                 array_push($turnover2013, $tmp);
             }
             if ($period['Year'] == '2014') {
-                $tmp['sub'] = substr($period['FromDate'], 5, 2);
-                $tmp['turnover'] = abs(array_sum($client->Account_GetEntryTotalsByDate(array('accounts' => $accs->AccountHandle, 'first' => $period['FromDate'], 'last' => $period['ToDate']))->Account_GetEntryTotalsByDateResult->decimal));
+                //$tmp['sub'] = substr($period['FromDate'], 5, 2);
+                $tmp = abs(array_sum($client->Account_GetEntryTotalsByDate(array('accounts' => $accs->AccountHandle, 'first' => $period['FromDate'], 'last' => $period['ToDate']))->Account_GetEntryTotalsByDateResult->decimal));
                 array_push($turnover2014, $tmp);
             }
             if ($period['Year'] == '2015') {
-                $tmp['sub'] = substr($period['FromDate'], 5, 2);
-                $tmp['turnover'] = abs(array_sum($client->Account_GetEntryTotalsByDate(array('accounts' => $accs->AccountHandle, 'first' => $period['FromDate'], 'last' => $period['ToDate']))->Account_GetEntryTotalsByDateResult->decimal));
+                //$tmp['sub'] = substr($period['FromDate'], 5, 2);
+                $tmp= abs(array_sum($client->Account_GetEntryTotalsByDate(array('accounts' => $accs->AccountHandle, 'first' => $period['FromDate'], 'last' => $period['ToDate']))->Account_GetEntryTotalsByDateResult->decimal));
                 array_push($turnover2015, $tmp);
             }
             if ($period['Year'] == '2016') {
-                $tmp['sub'] = substr($period['FromDate'], 5, 2);
-                $tmp['turnover'] = abs(array_sum($client->Account_GetEntryTotalsByDate(array('accounts' => $accs->AccountHandle, 'first' => $period['FromDate'], 'last' => $period['ToDate']))->Account_GetEntryTotalsByDateResult->decimal));
+                //$tmp['sub'] = substr($period['FromDate'], 5, 2);
+                $tmp = abs(array_sum($client->Account_GetEntryTotalsByDate(array('accounts' => $accs->AccountHandle, 'first' => $period['FromDate'], 'last' => $period['ToDate']))->Account_GetEntryTotalsByDateResult->decimal));
                 array_push($turnover2016, $tmp);
             }
         }
@@ -125,26 +128,60 @@ class IndexController extends AbstractActionController
         );
 
         foreach ($turnover as $key => $value) {
+
             $turn = new Turnover();
             $turn->setUser($user);
             $turn->setYear($key);
-            foreach ($value as $year) {
-                if ($year['sub'] == '01') $turn->setJan($year['turnover']);
-                if ($year['sub'] == '02') $turn->setFeb($year['turnover']);
-                if ($year['sub'] == '03') $turn->setMar($year['turnover']);
-                if ($year['sub'] == '04') $turn->setApr($year['turnover']);
-                if ($year['sub'] == '05') $turn->setMay($year['turnover']);
-                if ($year['sub'] == '06') $turn->setJun($year['turnover']);
-                if ($year['sub'] == '07') $turn->setJul($year['turnover']);
-                if ($year['sub'] == '08') $turn->setAug($year['turnover']);
-                if ($year['sub'] == '09') $turn->setSep($year['turnover']);
-                if ($year['sub'] == '10') $turn->setOct($year['turnover']);
-                if ($year['sub'] == '11') $turn->setNov($year['turnover']);
-                if ($year['sub'] == '12') $turn->setDec($year['turnover']);
-            }
-            $entityManager->persist($turn);
-            $entityManager->flush();
+
+            $turn->setTurnover(json_encode($value));
+            // var_dump($turn);
+            $yearntityManager->persist($turn);
+            $yearntityManager->flush();
         }
         //}
+    }
+    public function turnoverAction(){
+        $year = new \DateTime();
+        $year = $year -> format('Y');
+        $year =  $this->getRequest()->getPost('year', $year);
+        $yearntityManager = $this->getServiceLocator()
+            ->get('doctrine.entitymanager.orm_default');
+        $user = $yearntityManager->getRepository('MyUser\Entity\User')->find(1);
+
+        $turnoverAll = $yearntityManager->getRepository('MyEconomic\Entity\Turnover')->findBy(array('user'=>$user));
+        $years = array();
+        $turnoverTotal = array();
+        $turnoverAverage = array();
+        foreach($turnoverAll as $turnover){
+            array_push($years, $turnover->getYear());
+            $tmp = json_decode($turnover->getTurnover());
+            $total = array_sum($tmp);
+            array_push($turnoverTotal, $total);
+            if($turnover->getYear()==$year || $turnover->getYear()==$year-1){
+                array_push($turnoverAverage, $total/12);
+
+            };
+            if($turnover->getYear()==$year){
+                $turnoverThis=$tmp;
+            }elseif($turnover->getYear()==$year-1){
+                $turnoverLast=$tmp;
+            }
+        }
+
+        $dif = array();
+        foreach($turnoverThis as $key => $val){
+            if($val<$turnoverLast[$key]){
+                array_push($dif,$key);
+            }
+        }
+
+        return array(
+            "year"               => (int)$year,
+            "turnoverThis"          => $turnoverThis,
+            "turnoverLast"          => $turnoverLast,
+            "dif"                   => $dif,
+            "years"                 => $years,
+            "turnoverTotal"         => $turnoverTotal,
+            "turnoverAverage"       => $turnoverAverage);
     }
 }

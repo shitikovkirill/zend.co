@@ -1,4 +1,5 @@
 nbproject
+data/DoctrineORMModule
 ._*
 .vagrant
 .~lock.*

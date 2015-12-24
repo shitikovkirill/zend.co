@@ -1,5 +1,6 @@
 <?php
 return array(
+    'url_api' => 'https://api.e-conomic.com/secure/api1/EconomicWebservice.asmx?WSDL',
     'doctrine' => array(
         'driver' => array(
             'my_economic' => array(
@@ -21,9 +22,8 @@ return array(
     ),
     'router' => array(
         'routes' => array(
-            'my_economic' => array(
+            'myeconomic' => array(
                 'type' => 'Literal',
-                'priority' => 1000,
                 'options' => array(
                     'route' => '/economic',
                     'defaults' => array(
@@ -34,14 +34,15 @@ return array(
                 ),
                 'may_terminate' => true,
                 'child_routes' => array(
-                    'add' => array(
-                        'type' => 'Literal',
+                    'default' => array(
+                        'type' => 'Segment',
                         'options' => array(
-                            'route' => '/add',
+                            'route' => '/[:controller[/:action]]',
+                            'constraints' => array(
+                                'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                            ),
                             'defaults' => array(
-                                '__NAMESPACE__' => 'MyEconomic\Controller',
-                                'controller' => 'Index',
-                                'action' => 'add',
                             ),
                         ),
                     ),
@@ -51,7 +52,7 @@ return array(
     ),
     'view_manager' => array(
         'template_path_stack' => array(
-            //'my_economic' => __DIR__ . '/../view',
+            'my_economic' => __DIR__ . '/../view',
         ),
     ),
 );

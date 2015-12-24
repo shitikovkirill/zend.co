@@ -39,52 +39,6 @@ return array(
             'MyUser\Controller\Index' => 'MyUser\Controller\IndexController',
         ),
     ),
-    /*'router' => array(
-        'routes' => array(
-            'myuser' => array(
-                'type' => 'Literal',
-                'options' => array(
-                    // Change this to something specific to your module
-                    'route' => '/test',
-                    'defaults' => array(
-                        // Change this value to reflect the namespace in which
-                        // the controllers for your module are found
-                        '__NAMESPACE__' => 'MyUser\Controller',
-                        'controller' => 'Index',
-                        'action' => 'index',
-                    ),
-                ),
-            ),
-            'myuserx' => array(
-                'type' => 'Literal',
-                'options' => array(
-                    // Change this to something specific to your module
-                    'route' => '/xxx',
-                    'defaults' => array(
-                        // Change this value to reflect the namespace in which
-                        // the controllers for your module are found
-                        '__NAMESPACE__' => 'MyUser\Controller',
-                        'controller' => 'Index',
-                        'action' => 'xxx',
-                    ),
-                ),
-            ),
-            'turnover' => array(
-                'type' => 'Literal',
-                'options' => array(
-                    // Change this to something specific to your module
-                    'route' => '/turn',
-                    'defaults' => array(
-                        // Change this value to reflect the namespace in which
-                        // the controllers for your module are found
-                        '__NAMESPACE__' => 'MyUser\Controller',
-                        'controller' => 'Index',
-                        'action' => 'turnover',
-                    ),
-                ),
-            ),
-        ),
-    ),*/
     'router' => array(
         'routes' => array(
             'myuser' => array(

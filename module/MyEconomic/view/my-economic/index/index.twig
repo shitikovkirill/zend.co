@@ -1,0 +1,6 @@
+{% extends 'layout/layout.twig' %}
+
+{% block content %}
+<a href="{{ url('myeconomic', {'controller':'index' ,'action': 'adduser'}) }}">Add/Edit Econ User</a><br>
+    <a href="{{ url('myeconomic', {'controller':'index' ,'action': 'turnover'}) }}">Graf</a><br>
+{% endblock %}
