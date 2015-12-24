@@ -21,6 +21,7 @@ return array(
         'ZfcTwig',
         'ZfcUserCrud',
         'MyUser',
+        'MyEconomic',
         'Application',
     ),
 

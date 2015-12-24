@@ -34,4 +34,46 @@ return array(
             ),
         ),
     ),
+    'controllers' => array(
+        'invokables' => array(
+            'MyUser\Controller\Index' => 'MyUser\Controller\IndexController',
+        ),
+    ),
+    'router' => array(
+        'routes' => array(
+            'myuser' => array(
+                'type' => 'Literal',
+                'options' => array(
+                    // Change this to something specific to your module
+                    'route' => '/test',
+                    'defaults' => array(
+                        // Change this value to reflect the namespace in which
+                        // the controllers for your module are found
+                        '__NAMESPACE__' => 'MyUser\Controller',
+                        'controller' => 'Index',
+                        'action' => 'index',
+                    ),
+                ),
+            ),
+            'myuserx' => array(
+                'type' => 'Literal',
+                'options' => array(
+                    // Change this to something specific to your module
+                    'route' => '/xxx',
+                    'defaults' => array(
+                        // Change this value to reflect the namespace in which
+                        // the controllers for your module are found
+                        '__NAMESPACE__' => 'MyUser\Controller',
+                        'controller' => 'Index',
+                        'action' => 'xxx',
+                    ),
+                ),
+            ),
+        ),
+    ),
+    'view_manager' => array(
+        'template_path_stack' => array(
+            'zfcuser' => __DIR__ . '/../view',
+        ),
+    ),
 );

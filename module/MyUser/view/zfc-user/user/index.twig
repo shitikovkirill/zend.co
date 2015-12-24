@@ -1,0 +1,14 @@
+{% extends 'layout/layout.twig' %}
+
+{% block content %}
+<div style="float:left; padding-right:16px;">
+    {{ gravatar(zfcUserIdentity().getEmail()) }}
+</div>
+<h3>
+    {{ translate('Hello') }}, {{ zfcUserDisplayName() }}!
+</h3>
+<a href="<?php echo $this->url('zfcuser/logout') ?>">
+    [{{ translate('Sign Out') }}]
+</a>
+<div style="clear:both;"></div>
+{% endblock content %}
