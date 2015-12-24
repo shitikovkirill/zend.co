@@ -140,11 +140,13 @@ class IndexController extends AbstractActionController
         //}
     }
     public function turnoverAction(){
+        $year = new \DateTime();
+        $year = $year -> format('Y');
+        $year =  $this->getRequest()->getPost('year', $year);
         $yearntityManager = $this->getServiceLocator()
             ->get('doctrine.entitymanager.orm_default');
         $user = $yearntityManager->getRepository('MyUser\Entity\User')->find(1);
-        $year = new \DateTime();
-        $year = $year -> format('Y');
+
         $turnoverAll = $yearntityManager->getRepository('MyUser\Entity\Turnover')->findBy(array('user'=>$user));
         $years = array();
         $turnoverTotal = array();

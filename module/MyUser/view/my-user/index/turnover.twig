@@ -146,7 +146,8 @@
             <button>SSS</button>
             <select name='year'>
                 {% for y in years %}
-
+                <option value='{{ y }}' {% if y == year %}selected{% endif %}>{{ y }}</option>
+                {% endfor %}
             </select>
         </form>
     </div>
