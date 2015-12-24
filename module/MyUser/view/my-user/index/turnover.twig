@@ -1,0 +1,168 @@
+{% extends 'layout/layout.twig' %}
+
+{% block content %}
+<script src="http://cdn.zingchart.com/zingchart.min.js"></script>
+
+<script type="text/javascript">
+    window.onload = function () {
+
+        {# Generate turnover chart current year #}
+
+        var chart{{ year }} = {
+            "type": "bar",
+            "title":{
+                "text": "Turnover for {{ year }}"
+            },
+            "scale-x":{
+                "labels":[
+                    "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+                ]
+            },
+            "series": [
+                { "values": [
+                    {% for turn in turnoverThis %}
+                    {{ turn }},
+                    {% endfor %}
+                ] },
+            ]
+        };
+
+        {# Average turnover by years chart #}
+        var chartYearsAverage = {
+            "type": "bar",
+            "title":{
+                "text": "Average Turnover by Years"
+            },
+            "scale-x":{
+                "labels":[
+                    {{ year-1 }}, {{ year }}
+                ]
+            },
+            "scale-y":{
+                "values" : "0:200000:5000"
+            },
+            "plot":{
+                "rules":[
+                    {
+                        "rule":"%p === 0 && %i === 0",
+                        "background-color":"#FFFF00"
+                    },
+                    {
+                        "rule":"%p == 0 && %i === 1",
+                        "background-color":"#696969"
+                    }
+                ]
+            },
+            "series": [
+                { "values": [
+                    {% for turn in turnoverAverage %}
+                    {{ turn }},
+                    {% endfor %}
+                ] },
+            ]
+        };
+
+        /* Total turnover by years chart */
+        var chartYearsTotal = {
+            "type": "bar",
+            "title":{
+                "text": "Total Turnover by Years"
+            },
+            "scale-x":{
+                "labels":[
+                    {% for y in years %}
+                    {{ y }},
+                    {% endfor %}
+                ]
+            },
+            "series": [
+                { "values": [
+                    {% for turn in turnoverTotal %}
+                    {{ turn }},
+                    {% endfor %}
+                ] },
+            ]
+        };
+
+
+        var chartCompared = {
+            "type":"mixed",
+            "title":{
+                "text": "Turnover Compare: {{ year }} vs {{ year-1 }}"
+            },
+            "scale-x":{
+                "labels":[
+                    "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+                ]
+            },
+            "plot":{
+                "rules":[
+                    {% for d in dif %}
+                    {
+                        "rule":"%p === 0 && %i === {{ d }}",
+                        "background-color":"red"
+                    },
+                    {% endfor %}
+                    {
+                        "rule":"%p == 1",
+                        "line-color":"#FFFF00"
+                    }
+                ]
+            },
+            "series":[
+                {
+                    "type": "bar",
+                    "values": [
+                        {% for turn in turnoverThis %}
+                        {{ turn }},
+                        {% endfor %}
+                    ],
+                    "hover-state":{
+                        "visible":0
+                    },
+                    "background-color":"#696969"
+                },
+                {
+                    "type": "line",
+                    "values": [
+                        {% for turn in turnoverLast %}
+                        {{ turn }},
+                        {% endfor %}
+                    ],
+                    "line-color":"#FFFF00"
+                }
+            ]
+        };
+
+        zingchart.render({id: 'turnoverByYearsAverage', data: chartYearsAverage });
+        zingchart.render({id: 'turnoverByYears', data: chartYearsTotal });
+        zingchart.render({id: 'turnover{{ year }}', data: chart{{ year }} });
+        zingchart.render({id: 'turnoverCompared', data: chartCompared });
+    }
+</script>
+<div class = "row">
+    <div class ="col-sm-6 col-sm-offset-3">
+        <form method = 'POST'>
+            <button>SSS</button>
+            <select name='year'>
+                {% for y in years %}
+
+            </select>
+        </form>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-6">
+        <div id="turnover{{ year }}" style="height: 300px; width: 100%;"></div>
+    </div>
+    <div class="col-sm-6">
+        <div id="turnoverCompared" style="height: 300px; width: 100%;"></div>
+    </div>
+    <div class="col-sm-6">
+        <div id="turnoverByYearsAverage" style="height: 300px; width: 100%;"></div>
+    </div>
+    <div class="col-sm-6">
+        <div id="turnoverByYears" style="height: 300px; width: 100%;"></div>
+    </div>
+</div>
+{% endblock %}

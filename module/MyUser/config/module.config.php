@@ -39,7 +39,7 @@ return array(
             'MyUser\Controller\Index' => 'MyUser\Controller\IndexController',
         ),
     ),
-    'router' => array(
+    /*'router' => array(
         'routes' => array(
             'myuser' => array(
                 'type' => 'Literal',
@@ -69,11 +69,55 @@ return array(
                     ),
                 ),
             ),
+            'turnover' => array(
+                'type' => 'Literal',
+                'options' => array(
+                    // Change this to something specific to your module
+                    'route' => '/turn',
+                    'defaults' => array(
+                        // Change this value to reflect the namespace in which
+                        // the controllers for your module are found
+                        '__NAMESPACE__' => 'MyUser\Controller',
+                        'controller' => 'Index',
+                        'action' => 'turnover',
+                    ),
+                ),
+            ),
+        ),
+    ),*/
+    'router' => array(
+        'routes' => array(
+            'myuser' => array(
+                'type' => 'Literal',
+                'options' => array(
+                    'route' => '/myuser',
+                    'defaults' => array(
+                        '__NAMESPACE__' => 'MyUser\Controller',
+                        'controller' => 'Index',
+                        'action' => 'index',
+                    ),
+                ),
+                'may_terminate' => true,
+                'child_routes' => array(
+                    'default' => array(
+                        'type' => 'Segment',
+                        'options' => array(
+                            'route' => '/[:controller[/:action]]',
+                            'constraints' => array(
+                                'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                            ),
+                            'defaults' => array(
+                            ),
+                        ),
+                    ),
+                ),
+            ),
         ),
     ),
     'view_manager' => array(
         'template_path_stack' => array(
-            'zfcuser' => __DIR__ . '/../view',
+            'MyUser' => __DIR__ . '/../view',
         ),
     ),
 );
