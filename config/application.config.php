@@ -19,7 +19,6 @@ return array(
         'BjyAuthorize',
         'ZfcAdmin',
         'ZfcTwig',
-        //'ZfcUserCrud',
         'MyUser',
         'MyEconomic',
         'Application',
