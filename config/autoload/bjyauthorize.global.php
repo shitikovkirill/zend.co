@@ -32,8 +32,8 @@ return array(
                     'action' => array('logout'),
                     'roles' => array('user','admin'),
                 ),
-                array('controller' => 'Application\Controller\Index', 'roles' => array()),
-                array('controller'=>array('ZfcAdmin\Controller\AdminController'), 'roles'=>'admin'),
+                array('controller' => array('Application\Controller\Index','MyEconomic\Controller\Index'), 'roles' => array()),
+                array('controller'=>array('ZfcAdmin\Controller\AdminController',), 'roles'=>'admin'),
 
                 array('controller' => 'HtProfileImage\ProfileImage', 'roles' => array()),
                 array('controller' => 'HtImgModule\Controller\ImageController', 'roles' => array()),
