@@ -9,30 +9,34 @@ use MyEconomic\Entity\Turnover;
 class IndexController extends AbstractActionController
 {
     public function indexAction(){
+        if ($this->zfcUserAuthentication()->hasIdentity()) {
 
+        } else {
+           return $this->redirect()->toRoute('zfcuser');
+        }
     }
+
     public function adduserAction()
     {
         $translator = $this->getServiceLocator()->get('translator');
-        $yearntityManager = $this->getServiceLocator()
-            ->get('doctrine.entitymanager.orm_default');
-
         $user = $this->zfcUserAuthentication()->getIdentity();
-        $economicUser = $yearntityManager->getRepository('MyEconomic\Entity\EconomicUser')->findOneBy(array('user'=>$user));
+        $entityManager = $this->getServiceLocator()
+            ->get('doctrine.entitymanager.orm_default');
+        $economicUser = $entityManager->getRepository('MyEconomic\Entity\EconomicUser')->findOneBy(array('user'=>$user));
+
         if(empty($economicUser)){
             $economicUser = new EconomicUser();
         }
-
 
         $form = new EUserForm($economicUser);
 
         if ($this->getRequest()->isPost()) {
             $form->setData($this->getRequest()->getPost());
             if ($form->isValid()) {
-                $yearconomicUser = $form->getData();
-                $yearconomicUser->setUser($user);
-                $yearntityManager->persist($yearconomicUser);
-                $yearntityManager->flush();
+                $economicUser = $form->getData();
+                $economicUser->setUser($user);
+                $entityManager->persist($economicUser);
+                $entityManager->flush();
                 $this->flashMessenger()->addSuccessMessage($translator->translate('E-conomic User saved'));
                 //$this->redirect()->toRoute('');
             }
@@ -50,20 +54,22 @@ class IndexController extends AbstractActionController
 
         $client = new \SoapClient($wsdlUrl, array("trace" => 1, "exceptions" => 1));
 
-        $yearntityManager = $this->getServiceLocator()
+        $translator = $this->getServiceLocator()->get('translator');
+        $user = $this->zfcUserAuthentication()->getIdentity();
+        $entityManager = $this->getServiceLocator()
             ->get('doctrine.entitymanager.orm_default');
+        $eUser = $entityManager->getRepository('MyEconomic\Entity\EconomicUser')->findOneBy(array('user'=>$user));
 
-        $yearUser = $yearntityManager->getRepository('MyEconomic\Entity\EconomicUser')->find(1);
-        $user = $yearntityManager->getRepository('MyUser\Entity\User')->find(1);
+        if(empty($eUser)){
+            return $this->redirect()->toRoute('myeconomic', array('action'=>'adduser'));
+        }
 
         $client->Connect(array(
-            'agreementNumber' => $yearUser->getAgreementNumber(),
-            'userName' => $yearUser->getUsername(),
-            'password' => $yearUser->getPassword()));
-
+            'agreementNumber' => $eUser->getAgreementNumber(),
+            'userName' => $eUser->getUsername(),
+            'password' => $eUser->getPassword()));
         $accYears = $client->AccountingPeriod_GetAll()->AccountingPeriod_GetAllResult->AccountingPeriodHandle;
         $accPeriodData = $client->AccountingPeriod_GetDataArray(array('entityHandles' => $accYears))->AccountingPeriod_GetDataArrayResult;
-
         /* Get accounting periods */
         $accountPeriods = array();
         foreach ($accPeriodData->AccountingPeriodData as $period) {
@@ -72,11 +78,9 @@ class IndexController extends AbstractActionController
             $tmp['ToDate'] = $period->ToDate;
             array_push($accountPeriods, $tmp);
         };
-
         /* Get turnovers by periods */
         $keyFigureCodeHundlers = $client->KeyFigureCode_FindByNumber(array('number' => '1'))->KeyFigureCode_FindByNumberResult;
         $accs = $client->KeyFigureCode_GetAccounts(array('keyFigureCodeHandle' => $keyFigureCodeHundlers))->KeyFigureCode_GetAccountsResult;
-
         $tmp = array();
         $turnover2011 = array();
         $turnover2012 = array();
@@ -116,8 +120,6 @@ class IndexController extends AbstractActionController
                 array_push($turnover2016, $tmp);
             }
         }
-
-
         $turnover = array(
             '2011' => $turnover2011,
             '2012' => $turnover2012,
@@ -126,29 +128,32 @@ class IndexController extends AbstractActionController
             '2015' => $turnover2015,
             '2016' => $turnover2016
         );
-
         foreach ($turnover as $key => $value) {
-
             $turn = new Turnover();
             $turn->setUser($user);
             $turn->setYear($key);
-
             $turn->setTurnover(json_encode($value));
-            // var_dump($turn);
-            $yearntityManager->persist($turn);
-            $yearntityManager->flush();
+            $entityManager->persist($turn);
+            $entityManager->flush();
         }
-        //}
     }
+
     public function turnoverAction(){
+        $user = $this->zfcUserAuthentication()->getIdentity();
+        $entityManager = $this->getServiceLocator()
+            ->get('doctrine.entitymanager.orm_default');
+        $eUser = $entityManager->getRepository('MyEconomic\Entity\EconomicUser')->findOneBy(array('user'=>$user));
+
+        if(empty($eUser)){
+            return $this->redirect()->toRoute('myeconomic', array('action'=>'adduser'));
+        }
+
         $year = new \DateTime();
         $year = $year -> format('Y');
         $year =  $this->getRequest()->getPost('year', $year);
-        $yearntityManager = $this->getServiceLocator()
-            ->get('doctrine.entitymanager.orm_default');
-        $user = $yearntityManager->getRepository('MyUser\Entity\User')->find(1);
 
-        $turnoverAll = $yearntityManager->getRepository('MyEconomic\Entity\Turnover')->findBy(array('user'=>$user));
+        $turnoverAll = $entityManager->getRepository('MyEconomic\Entity\Turnover')->findBy(array('user'=>$user));
+
         $years = array();
         $turnoverTotal = array();
         $turnoverAverage = array();
