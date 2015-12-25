@@ -16,6 +16,10 @@ class IndexController extends AbstractActionController
         }
     }
 
+    /********************************
+     * Add E-conomic credentials for
+     *      current user
+     *******************************/
     public function adduserAction()
     {
         $translator = $this->getServiceLocator()->get('translator');
@@ -46,98 +50,106 @@ class IndexController extends AbstractActionController
         );
     }
 
+    /********************************
+     * Load User Data from E-conomic
+     *      to local database
+     *******************************/
     public function loaddataAction()
     {
         //try {
-        $wsdlUrl = 'https://api.e-conomic.com/secure/api1/EconomicWebservice.asmx?WSDL'; //$this->getServiceLocator()->get('url_api');
-
+        $wsdlUrl = 'https://api.e-conomic.com/secure/api1/EconomicWebservice.asmx?WSDL';
+                
         $client = new \SoapClient($wsdlUrl, array("trace" => 1, "exceptions" => 1));
 
         $translator = $this->getServiceLocator()->get('translator');
+
+        /* Get current local user */
         $user = $this->zfcUserAuthentication()->getIdentity();
         $entityManager = $this->getServiceLocator()
             ->get('doctrine.entitymanager.orm_default');
+
+        /* Get E-conomic credentials for current user */
         $eUser = $entityManager->getRepository('MyEconomic\Entity\EconomicUser')->findOneBy(array('user'=>$user));
 
+        /* Connect to E-conomic SOAP API server */
         if(empty($eUser)){
             return $this->redirect()->toRoute('myeconomic', array('action'=>'adduser'));
         }
 
+        /* Connect to E-conomic SOAP API server */
         $client->Connect(array(
             'agreementNumber' => $eUser->getAgreementNumber(),
             'userName' => $eUser->getUsername(),
             'password' => $eUser->getPassword()));
+
+        /* Get accounting years */
         $accYears = $client->AccountingPeriod_GetAll()->AccountingPeriod_GetAllResult->AccountingPeriodHandle;
         $accPeriodData = $client->AccountingPeriod_GetDataArray(array('entityHandles' => $accYears))->AccountingPeriod_GetDataArrayResult;
+        
         /* Get accounting periods */
         $accountPeriods = array();
+        $tmpPeriod = array();
+        $tmp = array();
+        $counter = count($accPeriodData->AccountingPeriodData);
         foreach ($accPeriodData->AccountingPeriodData as $period) {
-            $tmp['Year'] = $period->AccountingYearHandle->Year;
-            $tmp['FromDate'] = $period->FromDate;
-            $tmp['ToDate'] = $period->ToDate;
-            array_push($accountPeriods, $tmp);
-        };
-        /* Get turnovers by periods */
+            if (!in_array($period->AccountingYearHandle->Year, $tmp)) {
+                array_push($tmp, $period->AccountingYearHandle->Year);
+                if ($tmpPeriod) array_push($accountPeriods, $tmpPeriod);
+                $tmpPeriod = array('Year' => $period->AccountingYearHandle->Year, 'SubPeriods' => array());
+            }
+
+            $tmpSubPeriod['FromDate'] = $period->FromDate;
+            $tmpSubPeriod['ToDate'] = $period->ToDate;
+
+            array_push($tmpPeriod['SubPeriods'], $tmpSubPeriod);
+
+            $counter--;
+            if (!$counter) {
+                array_push($accountPeriods, $tmpPeriod);
+            }
+        };        
+
+        /* Get turnovers */
         $keyFigureCodeHundlers = $client->KeyFigureCode_FindByNumber(array('number' => '1'))->KeyFigureCode_FindByNumberResult;
         $accs = $client->KeyFigureCode_GetAccounts(array('keyFigureCodeHandle' => $keyFigureCodeHundlers))->KeyFigureCode_GetAccountsResult;
-        $tmp = array();
-        $turnover2011 = array();
-        $turnover2012 = array();
-        $turnover2013 = array();
-        $turnover2014 = array();
-        $turnover2015 = array();
-        $turnover2016 = array();
-        foreach ($accountPeriods as $period) {
-            if ($period['Year'] == '2011') {                
+        
+        /* Get turnovers array for every month */
+        foreach ($accountPeriods as $year) {
+            $tmpPeriod = array();
+            foreach ($year['SubPeriods'] as $period) {
                 $tmp = abs(array_sum($client->Account_GetEntryTotalsByDate(array('accounts' => $accs->AccountHandle, 'first' => $period['FromDate'], 'last' => $period['ToDate']))->Account_GetEntryTotalsByDateResult->decimal));
-                array_push($turnover2011, $tmp);
+                array_push($tmpPeriod, $tmp);
             }
-            if ($period['Year'] == '2012') {                
-                $tmp = abs(array_sum($client->Account_GetEntryTotalsByDate(array('accounts' => $accs->AccountHandle, 'first' => $period['FromDate'], 'last' => $period['ToDate']))->Account_GetEntryTotalsByDateResult->decimal));
-                array_push($turnover2012, $tmp);
-            }
-            if ($period['Year'] == '2013') {                
-                $tmp = abs(array_sum($client->Account_GetEntryTotalsByDate(array('accounts' => $accs->AccountHandle, 'first' => $period['FromDate'], 'last' => $period['ToDate']))->Account_GetEntryTotalsByDateResult->decimal));
-                array_push($turnover2013, $tmp);
-            }
-            if ($period['Year'] == '2014') {                
-                $tmp = abs(array_sum($client->Account_GetEntryTotalsByDate(array('accounts' => $accs->AccountHandle, 'first' => $period['FromDate'], 'last' => $period['ToDate']))->Account_GetEntryTotalsByDateResult->decimal));
-                array_push($turnover2014, $tmp);
-            }
-            if ($period['Year'] == '2015') {                
-                $tmp= abs(array_sum($client->Account_GetEntryTotalsByDate(array('accounts' => $accs->AccountHandle, 'first' => $period['FromDate'], 'last' => $period['ToDate']))->Account_GetEntryTotalsByDateResult->decimal));
-                array_push($turnover2015, $tmp);
-            }
-            if ($period['Year'] == '2016') {                
-                $tmp = abs(array_sum($client->Account_GetEntryTotalsByDate(array('accounts' => $accs->AccountHandle, 'first' => $period['FromDate'], 'last' => $period['ToDate']))->Account_GetEntryTotalsByDateResult->decimal));
-                array_push($turnover2016, $tmp);
-            }
+            $turnover[$year['Year']] = $tmpPeriod;
         }
-        $turnover = array(
-            '2011' => $turnover2011,
-            '2012' => $turnover2012,
-            '2013' => $turnover2013,
-            '2014' => $turnover2014,
-            '2015' => $turnover2015,
-            '2016' => $turnover2016
-        );
-        foreach ($turnover as $key => $value) {
 
+        /* Save Turnovers in local database */
+        foreach ($turnover as $key => $value) {
+            /* check if record already exist */
             $tmp = $entityManager->getRepository('MyEconomic\Entity\Turnover')->findOneBy(array('user' => $user, 'year' => $key));
             $turn = $tmp ? $tmp : new Turnover();
+
+            /* fill fields with data */
             $turn->setUser($user);
             $turn->setYear($key);
             $turn->setTurnover(json_encode($value));
 
+            /* save */
             $entityManager->persist($turn);
             $entityManager->flush();
-        }
+        } 
+
+        /* Close connection */
+        $client->Disconnect();
 
         $resultMessage = 'Your data loaded from E-Conomic to local service successfully!';
 
         return array( 'message' => $resultMessage );
     }
 
+    /********************************
+     * Show page with Turnover charts
+     *******************************/
     public function turnoverAction(){
         $user = $this->zfcUserAuthentication()->getIdentity();
         $entityManager = $this->getServiceLocator()
