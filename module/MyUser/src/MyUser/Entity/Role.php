@@ -6,11 +6,11 @@ use Doctrine\ORM\Mapping as ORM;
 use Zend\Permissions\Acl\Role\RoleInterface;
 
 /**
- - *
- - * @ORM\Entity
- - * @ORM\Table(name="role")
- - * @author Tom Oram <tom@scl.co.uk>
- - */
+ *
+ * @ORM\Entity
+ * @ORM\Table(name="role")
+ * @author Tom Oram <tom@scl.co.uk>
+ */
 class Role implements RoleInterface
 {
     /**
