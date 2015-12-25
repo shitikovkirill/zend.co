@@ -1,6 +1,24 @@
 {% extends 'layout/layout.twig' %}
 
 {% block content %}
-<a href="{{ url('myeconomic', {'controller':'index' ,'action': 'adduser'}) }}">Add/Edit Econ User</a><br>
-    <a href="{{ url('myeconomic', {'controller':'index' ,'action': 'turnover'}) }}">Graf</a><br>
+<div class="row">
+    <h1>E-conomic Sync Settings</h1>
+    <div class="col-md-6">
+        <a href="{{ url('myeconomic', {'action': 'adduser'}) }}" class="btn btn-info">Setup E-conomic User Credentials</a>
+    </div>
+    <div class="col-md-6">
+        <a href="{{ url('myeconomic', {'action': 'getdata'}) }}" class="btn btn-info">Sync Your E-conomic Data</a>
+    </div>
+</div>
+<br>
+<div class="row">
+    <h2>Charts Sets:</h2>
+    <div class="col-md-4">
+        <a href="{{ url('myeconomic', {'action': 'turnover'}) }}" class="btn btn-info">Turnover Charts</a><br>
+    </div>
+    <div class="col-md-4">
+        
+    </div>
+</div>
+    
 {% endblock %}

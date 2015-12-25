@@ -46,7 +46,7 @@ class IndexController extends AbstractActionController
     public function getdataAction()
     {
         //try {
-        $wsdlUrl = $this->getServiceLocator()->get('url_api');
+        $wsdlUrl = 'https://api.e-conomic.com/secure/api1/EconomicWebservice.asmx?WSDL'; //$this->getServiceLocator()->get('url_api');
 
         $client = new \SoapClient($wsdlUrl, array("trace" => 1, "exceptions" => 1));
 

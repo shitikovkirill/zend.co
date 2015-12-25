@@ -25,7 +25,7 @@ class EUserForm extends Form
             'name' => 'agreementNumber',
             'type' => 'Text',
             'options' => array(
-                'label' => 'agreementNumber',
+                'label' => 'Your E-conomic Agreement Number',
             ),
             'attributes' => array(
                 'class' => 'form-control input-sm',
@@ -36,7 +36,7 @@ class EUserForm extends Form
             'name' => 'username',
             'type' => 'Text',
             'options' => array(
-                'label' => '$username',
+                'label' => 'Your E-conomic Username',
             ),
             'attributes' => array(
                 'class' => 'form-control input-sm',
@@ -48,22 +48,22 @@ class EUserForm extends Form
             'name' => 'password',
             'type' => 'Text',
             'options' => array(
-                'label' => '$password',
+                'label' => 'Your E-conomic Password',
             ),
             'attributes' => array(
                 'class' => 'form-control input-sm',
             )
         ));
-
+        /*
         $this ->add(array(
             'name' => 'save',
             'type' => 'submit',
             'attributes' => array(
-                'value' => 'Добавить',
+                'value' => 'Update Credentials',
                 'class' => 'btn btn-sm btn-success'
             ),
         ));
-
+        */
         if(!empty($eUser->getId())){
             $this->bind($eUser);
         }

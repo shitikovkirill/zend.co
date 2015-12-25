@@ -142,13 +142,19 @@
 </script>
 <div class = "row">
     <div class ="col-sm-6 col-sm-offset-3">
-        <form method = 'POST'>
-            <button>Select year</button>
-            <select name='year'>
-                {% for y in years %}
-                <option value='{{ y }}' {% if y == year %}selected{% endif %}>{{ y }}</option>
-                {% endfor %}
-            </select>
+        <form class="form" method = 'POST'>
+            <div class="row">
+                <div class="col-xs-6" style="text-align: right;">
+                    <button class="btn btn-success">Select year</button>
+                </div> 
+                <div class="col-xs-6">
+                    <select class="form-control" name='year'>
+                        {% for y in years %}
+                            <option value='{{ y }}' {% if y == year %}selected{% endif %}>{{ y }}</option>
+                        {% endfor %}
+                    </select>
+                </div>    
+            </div>  
         </form>
     </div>
 </div>
