@@ -30,4 +30,14 @@ class Module
             $user->addRole($defaultUserRole);
         });
     }
+    public function getServiceConfig() {
+        return array(
+            'factories' => array(
+                'usercrud_options' => function ($sm) {
+                    $config = $sm->get('Config');
+                    return $config['usercrud'];
+                }
+            )
+        );
+    }
 }

@@ -1,5 +1,11 @@
 <?php
 return array(
+
+    'usercrud' => array(
+        'userEntity' => 'MyUser\Entity\User',
+        'roleEntity' => 'MyUser\Entity\Role'
+    ),
+
     'doctrine' => array(
         'driver' => array(
             'zfcuser_entity' => array(
@@ -32,6 +38,72 @@ return array(
                 'object_manager'    => 'doctrine.entity_manager.orm_default',
                 'role_entity_class' => 'MyUser\Entity\Role',
             ),
+        ),
+    ),
+
+    'controllers' => array(
+        'invokables' => array(
+            'MyUser\Controller\User' => 'MyUser\Controller\UserController',
+        ),
+    ),
+
+    'router' => array(
+        'routes' => array(
+            'zfcadmin' => array(
+                'child_routes' => array(
+                    'user-crud' => array(
+                        'type' => 'segment',
+                        'options' => array(
+                            'route' => '/users[/:action][/:id]',
+                            'defaults' => array(
+                                'controller' => 'MyUser\Controller\User',
+                                'action' => 'index',
+                            ),
+                        ),
+                    ),
+                ),
+            ),
+            'user-crud' => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route' => '/admin/users[/:action][/:id]',
+                    'defaults' => array(
+                        '__NAMESPACE__' => 'MyUser\Controller',
+                        'controller' => 'User',
+                        'action' => 'index',
+                    ),
+                ),
+                'may_terminate' => true,
+            ),
+            'user-crud-password' => array(
+                'type' => 'literal',
+                'options' => array(
+                    'route' => '/admin/password',
+                    'defaults' => array(
+                        '__NAMESPACE__' => 'MyUser\Controller',
+                        'controller' => 'User',
+                        'action' => 'password',
+                    ),
+                ),
+                'may_terminate' => true,
+            ),
+            'user-crud-role' => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route' => '/admin/roles[/:action][/:id]',
+                    'defaults' => array(
+                        '__NAMESPACE__' => 'MyUser\Controller',
+                        'controller' => 'Role',
+                        'action' => 'index',
+                    ),
+                ),
+                'may_terminate' => true,
+            ),
+        ),
+    ),
+    'view_manager' => array(
+        'template_path_stack' => array(
+            'MyUser' => __DIR__ . '/../view',
         ),
     ),
 );
