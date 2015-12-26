@@ -34,8 +34,8 @@ return array(
                 ),
                 array('controller' => 'Application\Controller\Index', 'roles' => array()),
                 array('controller'=>array('ZfcAdmin\Controller\AdminController',
-                    'ZfcUserCrud\Controller\Crud',
-                    'ZfcUserCrud\Controller\Role'), 'roles'=>'admin'),
+                    'MyUser\Controller\User',
+                    'MyUser\Controller\Role'), 'roles'=>'guest'),//admin
 
                 array('controller' => 'HtProfileImage\ProfileImage', 'roles' => array()),
                 array('controller' => 'HtImgModule\Controller\ImageController', 'roles' => array()),
