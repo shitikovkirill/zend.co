@@ -1,15 +1,20 @@
 <?php
 namespace MyUser\Controller;
 
+use MyUser\Forms\NameElement;
+use MyUser\Forms\UserFilter;
+use MyUser\Forms\UserForm;
+use MyUser\Model\UserModel;
+use MyUser\Forms\NameValidator;
 use Zend\Mvc\Controller\AbstractActionController;
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
 use Zend\Paginator\Paginator;
 use Zend\Form\Form;
-use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
 use Zend\InputFilter\InputFilter;
 use Zend\Crypt\Password\Bcrypt;
 use ZfcUser\Options\UserServiceOptionsInterface;
+use Zend\Stdlib\Hydrator\ClassMethods as ClassMethodsHydrator;
 
 class UserController extends AbstractActionController
 {
@@ -59,30 +64,37 @@ class UserController extends AbstractActionController
     }
 
     public function newAction() {
-        $translator = $this->getServiceLocator()->get('translator');
-        $form = $this->getForm();
-        $filter = $form->getInputFilter();
-        $filter
-            ->add(array(
-                'name' => 'password',
-                'required' => true
-            ))
-            ->add(array(
-                'name' => 'password_confirm',
-                'required' => true
-            ))
-        ;
+        $form = new UserForm($this->getOM());
+        $filter= new UserFilter();
         $form->setInputFilter($filter);
         if ($this->getRequest()->isPost()) {
+
             $form->setData($this->getRequest()->getPost());
+            $role= $form->get('roles');
+            $submit= $form->get('save');
+            $form->remove('roles');
+
             if ($form->isValid()) {
                 $user = $form->getData();
-                $user->setPassword($this->encriptPassword($user->getPassword()));
-                $this->getOM()->persist($user);
-                $this->getOM()->flush();
-                $this->flashMessenger()->addSuccessMessage($translator->translate('User saved'));
-                $this->redirect()->toRoute('user-crud');
+                $userModel = new UserModel($this->getOM());
+                $userNamesVal = $userModel->checkUsersName($user->getUsername());
+                $userEmailVal = $userModel->checkUsersEmail($user->getEmail());
+
+                if($userNamesVal){
+                    $form ->setMessages(array('username'=>array('Such login already exists.')));
+                } else if($userEmailVal){
+                    $form ->setMessages(array('email'=>array('Such email already exists.')));
+                }else{
+                    $myrole = $userModel ->getRoles($role->getValue());
+                    $user ->addRoles($myrole);
+                    $user->setPassword($this->encriptPassword($user->getPassword()));
+                    $userModel->addNewUser($user);
+                    $this->redirect()->toRoute('user-crud');
+                }
             }
+
+            $form->add($role);
+            $form->add($submit);
         }
         $form->prepare();
         return array(
@@ -91,17 +103,19 @@ class UserController extends AbstractActionController
     }
 
     public function editAction() {
-        $translator = $this->getServiceLocator()->get('translator');
-        $config = $this->getServiceLocator()->get('usercrud_options');
-        $form = $this->getForm();
-        $user = $this
-            ->getOM()
-            ->getRepository($config['userEntity'])
-            ->find($this->params()->fromRoute('id'));
+        $userModel = new UserModel($this->getOM());
+        $user = $userModel ->getUserById($this->params()->fromRoute('id'));
+        $form = new UserForm($this->getOM(), $user);
+
         $currentPassword = $user->getPassword();
         $form->bind($user);
+
         if ($this->getRequest()->isPost()) {
             $form->setData($this->getRequest()->getPost());
+            $role= $form->get('roles');
+            $submit= $form->get('save');
+            $form->remove('roles');
+
             if ($form->isValid()) {
                 $user = $form->getData();
                 /* @var $user User */
@@ -110,11 +124,25 @@ class UserController extends AbstractActionController
                 } else {
                     $user->setPassword($currentPassword);
                 }
-                $this->getOM()->persist($user);
-                $this->getOM()->flush();
-                $this->flashMessenger()->addSuccessMessage($translator->translate('User updated'));
-                $this->redirect()->toRoute('user-crud');
+
+                $userNamesVal = $userModel->checkUsersName($user->getUsername(), $user->getId());
+                $userEmailVal = $userModel->checkUsersEmail($user->getEmail(), $user->getId());
+
+                if($userNamesVal){
+                    $form ->setMessages(array('username'=>array('Such login already exists.')));
+                } else if($userEmailVal){
+                    $form ->setMessages(array('email'=>array('Such email already exists.')));
+                }else{
+                    $roles = $userModel ->getRoles($role->getValue());
+                    $user ->addRoles($roles);
+
+                    $userModel->addNewUser($user);
+                    $this->redirect()->toRoute('user-crud');
+                }
             }
+
+            $form->add($role);
+            $form->add($submit);
         }
         $form->prepare();
         return array(
@@ -204,7 +232,7 @@ class UserController extends AbstractActionController
         $form = new Form('user');
         $form
             ->setAttribute('class', 'form-horizontal')
-            ->setHydrator(new DoctrineHydrator($this->getOM(), $config['userEntity']))
+            ->setHydrator(new ClassMethodsHydrator(false))
             ->setObject($user)
             ->add(array(
                 'name' => 'displayName',
@@ -217,6 +245,7 @@ class UserController extends AbstractActionController
             ))
             ->add(array(
                 'name' => 'username',
+                'type' =>'MyUser\Forms\NameElement',
                 'options' => array(
                     'label' => $translator->translate('Username')
                 ),

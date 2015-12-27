@@ -5,6 +5,7 @@ return array(
         'identity_provider' => 'BjyAuthorize\Provider\Identity\AuthenticationIdentityProvider',
         'authenticated_role' => 'user',
         'role_providers'        => array(
+
             // using an object repository (entity repository) to load all roles into our ACL
             'BjyAuthorize\Provider\Role\ObjectRepositoryProvider' => array(
                 'object_manager'    => 'doctrine.entity_manager.orm_default',
@@ -35,12 +36,12 @@ return array(
                 array('controller' => 'Application\Controller\Index', 'roles' => array()),
                 array('controller'=>array('ZfcAdmin\Controller\AdminController',
                     'MyUser\Controller\User',
-                    'MyUser\Controller\Role'), 'roles'=>'guest'),//admin
+                    'MyUser\Controller\Role'), 'roles'=>array()),//admin
 
                 array('controller' => 'HtProfileImage\ProfileImage', 'roles' => array()),
                 array('controller' => 'HtImgModule\Controller\ImageController', 'roles' => array()),
 
-                array('controller' => 'Application\Controller\Index', 'roles' => array()),
+                array('controller' => 'zfcuser', 'roles' => array()),
                 array('controller' => 'Application\Controller\Index', 'roles' => array()),
                 array('controller' => 'Application\Controller\Index', 'roles' => array()),
                 array('controller' => 'Application\Controller\Index', 'roles' => array()),

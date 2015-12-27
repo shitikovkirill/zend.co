@@ -233,7 +233,7 @@ class User implements UserInterface, RoleProviderInterface
     {
         $this->roles[] = $role;
     }
-    
+
     /**
      * Add a role to the user.
      *
@@ -243,10 +243,11 @@ class User implements UserInterface, RoleProviderInterface
      */
     public function addRoles(Collection $roles)
     {
+        $this->removeRoles($this->roles);
         foreach($roles as $role){
-            $this->roles->add($role);
+                $this->roles->add($role);
         }
-        
+
     }
     
     public function removeRoles(Collection $roles) {
