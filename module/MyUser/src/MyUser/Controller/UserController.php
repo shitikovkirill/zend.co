@@ -14,7 +14,6 @@ use Zend\Form\Form;
 use Zend\InputFilter\InputFilter;
 use Zend\Crypt\Password\Bcrypt;
 use ZfcUser\Options\UserServiceOptionsInterface;
-use Zend\Stdlib\Hydrator\ClassMethods as ClassMethodsHydrator;
 
 class UserController extends AbstractActionController
 {

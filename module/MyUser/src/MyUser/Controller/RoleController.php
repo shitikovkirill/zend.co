@@ -8,9 +8,7 @@ use Zend\Mvc\Controller\AbstractActionController;
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
 use Zend\Paginator\Paginator;
-use Zend\Form\Form;
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
-use Zend\InputFilter\InputFilter;
 use ZfcUser\Options\UserServiceOptionsInterface;
 
 class RoleController extends AbstractActionController {
