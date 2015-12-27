@@ -5,7 +5,7 @@
 </div>
 <div class="row">
     <div class="col-md-3">
-        <a class="btn btn-info" href="<?php echo $this->url('zfc-user-crud-role', array('action' => 'new')); ?>">
+        <a class="btn btn-info" href="<?php echo $this->url('user-crud-role', array('action' => 'new')); ?>">
             <span class="glyphicon glyphicon-plus"></span>
         <?php echo $this->translate('New Role');?> 
         </a>
@@ -50,7 +50,7 @@
         <td>
                 <a href="
                 <?php
-                echo $this->url('zfc-user-crud-role', array(
+                echo $this->url('user-crud-role', array(
                     'action' => 'edit',
                     'id' => $role->getId()
                 ));
@@ -63,7 +63,7 @@
             <td>
                 <a href="
                 <?php
-                echo $this->url('zfc-user-crud-role', array(
+                echo $this->url('user-crud-role', array(
                     'action' => 'remove',
                     'id' => $role->getId()
                 ));
@@ -81,5 +81,5 @@
 <?php
 echo $this
         ->paginationControl(
-                $roles, 'Sliding', 'partial/paginator', array('route' => 'zfc-user-crud-role'));
+                $roles, 'Sliding', 'partial/paginator', array('route' => 'user-crud-role'));
 ?>

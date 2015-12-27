@@ -27,13 +27,15 @@ class UserController extends AbstractActionController
      * ORM object manager
      * @return \Doctrine\ORM\EntityManager
      */
-    protected function getOM() {
+    protected function getOM()
+    {
         return $this
             ->getServiceLocator()
             ->get('Doctrine\ORM\EntityManager');
     }
 
-    public function indexAction() {
+    public function indexAction()
+    {
         $config = $this->getServiceLocator()->get('usercrud_options');
         $query = $this
             ->getOM()
@@ -48,8 +50,7 @@ class UserController extends AbstractActionController
                 ->orWhere('q.displayName LIKE :search3')
                 ->setParameter('search1', "%{$searchTerm}%")
                 ->setParameter('search2', "%{$searchTerm}%")
-                ->setParameter('search3', "%{$searchTerm}%")
-            ;
+                ->setParameter('search3', "%{$searchTerm}%");
         }
         $paginator = new Paginator(
             new DoctrinePaginator(new ORMPaginator($query))
@@ -63,15 +64,25 @@ class UserController extends AbstractActionController
         );
     }
 
-    public function newAction() {
+    public function newAction()
+    {
         $form = new UserForm($this->getOM());
-        $filter= new UserFilter();
+        $filter = new UserFilter();
+        $filter->add(array(
+            'name' => 'password',
+            'required' => true
+        ))
+            ->add(array(
+                'name' => 'password_confirm',
+                'required' => true
+            ));
+
         $form->setInputFilter($filter);
         if ($this->getRequest()->isPost()) {
 
             $form->setData($this->getRequest()->getPost());
-            $role= $form->get('roles');
-            $submit= $form->get('save');
+            $role = $form->get('roles');
+            $submit = $form->get('save');
             $form->remove('roles');
 
             if ($form->isValid()) {
@@ -80,13 +91,13 @@ class UserController extends AbstractActionController
                 $userNamesVal = $userModel->checkUsersName($user->getUsername());
                 $userEmailVal = $userModel->checkUsersEmail($user->getEmail());
 
-                if($userNamesVal){
-                    $form ->setMessages(array('username'=>array('Such login already exists.')));
-                } else if($userEmailVal){
-                    $form ->setMessages(array('email'=>array('Such email already exists.')));
-                }else{
-                    $myrole = $userModel ->getRoles($role->getValue());
-                    $user ->addRoles($myrole);
+                if ($userNamesVal) {
+                    $form->setMessages(array('username' => array('Such login already exists.')));
+                } else if ($userEmailVal) {
+                    $form->setMessages(array('email' => array('Such email already exists.')));
+                } else {
+                    $myrole = $userModel->getRoles($role->getValue());
+                    $user->addRoles($myrole);
                     $user->setPassword($this->encriptPassword($user->getPassword()));
                     $userModel->addNewUser($user);
                     $this->redirect()->toRoute('user-crud');
@@ -102,18 +113,20 @@ class UserController extends AbstractActionController
         );
     }
 
-    public function editAction() {
+    public function editAction()
+    {
         $userModel = new UserModel($this->getOM());
-        $user = $userModel ->getUserById($this->params()->fromRoute('id'));
+        $user = $userModel->getUserById($this->params()->fromRoute('id'));
         $form = new UserForm($this->getOM(), $user);
-
+        $filter = new UserFilter();
+        $form->setInputFilter($filter);
         $currentPassword = $user->getPassword();
         $form->bind($user);
 
         if ($this->getRequest()->isPost()) {
             $form->setData($this->getRequest()->getPost());
-            $role= $form->get('roles');
-            $submit= $form->get('save');
+            $role = $form->get('roles');
+            $submit = $form->get('save');
             $form->remove('roles');
 
             if ($form->isValid()) {
@@ -128,13 +141,13 @@ class UserController extends AbstractActionController
                 $userNamesVal = $userModel->checkUsersName($user->getUsername(), $user->getId());
                 $userEmailVal = $userModel->checkUsersEmail($user->getEmail(), $user->getId());
 
-                if($userNamesVal){
-                    $form ->setMessages(array('username'=>array('Such login already exists.')));
-                } else if($userEmailVal){
-                    $form ->setMessages(array('email'=>array('Such email already exists.')));
-                }else{
-                    $roles = $userModel ->getRoles($role->getValue());
-                    $user ->addRoles($roles);
+                if ($userNamesVal) {
+                    $form->setMessages(array('username' => array('Such login already exists.')));
+                } else if ($userEmailVal) {
+                    $form->setMessages(array('email' => array('Such email already exists.')));
+                } else {
+                    $roles = $userModel->getRoles($role->getValue());
+                    $user->addRoles($roles);
 
                     $userModel->addNewUser($user);
                     $this->redirect()->toRoute('user-crud');
@@ -150,7 +163,8 @@ class UserController extends AbstractActionController
         );
     }
 
-    public function removeAction() {
+    public function removeAction()
+    {
         $translator = $this->getServiceLocator()->get('translator');
         $config = $this->getServiceLocator()->get('usercrud_options');
         $id = $this->params()->fromRoute('id');
@@ -164,14 +178,16 @@ class UserController extends AbstractActionController
         $this->redirect()->toRoute('user-crud');
     }
 
-    public function encriptPassword($newPass) {
+    public function encriptPassword($newPass)
+    {
         $bcrypt = new Bcrypt;
         $bcrypt->setCost($this->getOptions()->getPasswordCost());
         $pass = $bcrypt->create($newPass);
         return $pass;
     }
 
-    public function passwordAction(){
+    public function passwordAction()
+    {
         $translator = $this->getServiceLocator()->get('translator');
         if (!$this->zfcUserAuthentication()->hasIdentity()) {
             $this->flashMessenger()->addWarningMessage($translator->translate('User not logged in'));
@@ -209,7 +225,8 @@ class UserController extends AbstractActionController
      *
      * @return UserServiceOptionsInterface
      */
-    public function getOptions() {
+    public function getOptions()
+    {
         if (!$this->options instanceof UserServiceOptionsInterface) {
             $this->setOptions($this->getServiceLocator()->get('zfcuser_module_options'));
         }
@@ -221,133 +238,13 @@ class UserController extends AbstractActionController
      *
      * @param UserServiceOptionsInterface $options
      */
-    public function setOptions(UserServiceOptionsInterface $options) {
+    public function setOptions(UserServiceOptionsInterface $options)
+    {
         $this->options = $options;
     }
 
-    protected function getForm() {
-        $translator = $this->getServiceLocator()->get('translator');
-        $config = $this->getServiceLocator()->get('usercrud_options');
-        $user = new $config['userEntity'];
-        $form = new Form('user');
-        $form
-            ->setAttribute('class', 'form-horizontal')
-            ->setHydrator(new ClassMethodsHydrator(false))
-            ->setObject($user)
-            ->add(array(
-                'name' => 'displayName',
-                'options' => array(
-                    'label' => $translator->translate('Name')
-                ),
-                'attributes' => array(
-                    'class' => 'form-control input-sm',
-                )
-            ))
-            ->add(array(
-                'name' => 'username',
-                'type' =>'MyUser\Forms\NameElement',
-                'options' => array(
-                    'label' => $translator->translate('Username')
-                ),
-                'attributes' => array(
-                    'class' => 'form-control input-sm',
-                )
-            ))
-            ->add(array(
-                'name' => 'email',
-                'type' => 'email',
-                'options' => array(
-                    'label' => $translator->translate('Email')
-                ),
-                'attributes' => array(
-                    'class' => 'form-control input-sm',
-                )
-            ))
-            ->add(array(
-                'name' => 'password',
-                'type' => 'password',
-                'options' => array(
-                    'label' => $translator->translate('Password')
-                ),
-                'attributes' => array(
-                    'class' => 'form-control input-sm',
-                )
-            ))
-            ->add(array(
-                'name' => 'password_confirm',
-                'type' => 'password',
-                'options' => array(
-                    'label' => $translator->translate('Password Confirm')
-                ),
-                'attributes' => array(
-                    'class' => 'form-control input-sm',
-                )
-            ))
-            ->add(array(
-                'name' => 'state',
-                'type' => 'checkbox',
-                'options' => array(
-                    'label' => $translator->translate('Enabled')
-                )
-            ))
-            ->add(array(
-                'name' => 'roles',
-                'type' => 'DoctrineModule\Form\Element\ObjectMultiCheckbox',
-                'options' => array(
-                    'label' => $translator->translate('Roles'),
-                    'object_manager' => $this->getOM(),
-                    'target_class' => $config['roleEntity'],
-                    'property' => 'roleId'
-                ),
-            ))
-            ->add(array(
-                'name' => 'save',
-                'type' => 'submit',
-                'attributes' => array(
-                    'value' => 'Save',
-                    'class' => 'btn btn-sm btn-success'
-                )
-            ));
-
-        $filter = new InputFilter();
-        $filter
-            ->add(array(
-                'name' => 'username',
-                'required' => true
-            ))
-            ->add(array(
-                'name' => 'displayName',
-                'required' => true
-            ))
-            ->add(array(
-                'name' => 'email',
-                'required' => true,
-                'validators' => array(
-                    array(
-                        'name' => 'EmailAddress'
-                    )
-                )
-            ))
-            ->add(array(
-                    'name' => 'password_confirm',
-                    'required' => false,
-                    'validators' => array(
-                        array(
-                            'name' => 'Identical',
-                            'options' => array(
-                                'token' => 'password',
-                            )
-                        )
-                    )
-                )
-            )
-        ;
-        $form->setInputFilter($filter);
-
-        return $form;
-    }
-
-    protected function getPasswordForm() {
+    protected function getPasswordForm()
+    {
         $translator = $this->getServiceLocator()->get('translator');
         $form = new Form('password');
         $form
@@ -413,8 +310,7 @@ class UserController extends AbstractActionController
                         )
                     )
                 )
-            )
-        ;
+            );
         $form->setInputFilter($filter);
 
         return $form;

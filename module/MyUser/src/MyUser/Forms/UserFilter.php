@@ -45,14 +45,6 @@ public function __construct(){
                 )
             )
         )
-        ->add(array(
-            'name' => 'password',
-            'required' => true
-        ))
-        ->add(array(
-            'name' => 'password_confirm',
-            'required' => true
-        ))
     ;
 }
 

@@ -44,6 +44,7 @@ return array(
     'controllers' => array(
         'invokables' => array(
             'MyUser\Controller\User' => 'MyUser\Controller\UserController',
+            'MyUser\Controller\Role' => 'MyUser\Controller\RoleController'
         ),
     ),
 
