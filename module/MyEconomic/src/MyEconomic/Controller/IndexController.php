@@ -217,12 +217,16 @@ class IndexController extends AbstractActionController
         $keyFigureCodeHundlers = $client->KeyFigureCode_FindByNumber(array('number' => '3'))->KeyFigureCode_FindByNumberResult;
         $accs = $client->KeyFigureCode_GetAccounts(array('keyFigureCodeHandle' => $keyFigureCodeHundlers))->KeyFigureCode_GetAccountsResult;
         
-        if ($accs->AccountHandle) {  
+          
             /* Get Direct Pay array for every month */
             foreach ($accountPeriods as $year) {
                 $tmpPeriod = array();
                 foreach ($year['SubPeriods'] as $period) {
-                    $tmp = abs(array_sum($client->Account_GetEntryTotalsByDate(array('accounts' => $accs->AccountHandle, 'first' => $period['FromDate'], 'last' => $period['ToDate']))->Account_GetEntryTotalsByDateResult->decimal));
+                    if ($accs->AccountHandle) {
+                        $tmp = abs(array_sum($client->Account_GetEntryTotalsByDate(array('accounts' => $accs->AccountHandle, 'first' => $period['FromDate'], 'last' => $period['ToDate']))->Account_GetEntryTotalsByDateResult->decimal));
+                    } else {
+                        $tmp = 0;
+                    }
                     array_push($tmpPeriod, $tmp);
                 }
                 $directPay[$year['Year']] = $tmpPeriod;
@@ -243,18 +247,22 @@ class IndexController extends AbstractActionController
                 $entityManager->persist($directPayRecord);
                 $entityManager->flush();
             }
-        }
+        
 
         /* Get OtherDirectCosts */
         $keyFigureCodeHundlers = $client->KeyFigureCode_FindByNumber(array('number' => '4'))->KeyFigureCode_FindByNumberResult;
         $accs = $client->KeyFigureCode_GetAccounts(array('keyFigureCodeHandle' => $keyFigureCodeHundlers))->KeyFigureCode_GetAccountsResult;
         
-        if ($accs->AccountHandle) {
+        
             /* Get OtherDirectCosts array for every month */
             foreach ($accountPeriods as $year) {
                 $tmpPeriod = array();
                 foreach ($year['SubPeriods'] as $period) {
-                    $tmp = abs(array_sum($client->Account_GetEntryTotalsByDate(array('accounts' => $accs->AccountHandle, 'first' => $period['FromDate'], 'last' => $period['ToDate']))->Account_GetEntryTotalsByDateResult->decimal));
+                    if ($accs->AccountHandle) {
+                        $tmp = abs(array_sum($client->Account_GetEntryTotalsByDate(array('accounts' => $accs->AccountHandle, 'first' => $period['FromDate'], 'last' => $period['ToDate']))->Account_GetEntryTotalsByDateResult->decimal));
+                    } else {
+                        $tmp = 0;
+                    }
                     array_push($tmpPeriod, $tmp);
                 }
                 $otherDirectCosts[$year['Year']] = $tmpPeriod;
@@ -275,7 +283,7 @@ class IndexController extends AbstractActionController
                 $entityManager->persist($otherDirectCostsRecord);
                 $entityManager->flush();
             }
-        }
+        
 
         /* Get Overheads */
         $keyFigureCodeHundlers = $client->KeyFigureCode_FindByNumber(array('number' => '5'))->KeyFigureCode_FindByNumberResult;
@@ -682,5 +690,97 @@ class IndexController extends AbstractActionController
             "years"             => $years,
             "resultTotal"       => $resultTotal,
             "resultAverage"     => $resultAverage);
+    }
+
+    /********************************
+     * Show page with Profit Margin charts
+     *******************************/
+    public function profitMarginAction(){
+        $user = $this->zfcUserAuthentication()->getIdentity();
+        $entityManager = $this->getServiceLocator()
+            ->get('doctrine.entitymanager.orm_default');
+        $eUser = $entityManager->getRepository('MyEconomic\Entity\EconomicUser')->findOneBy(array('user'=>$user));
+
+        if(empty($eUser)){
+            return $this->redirect()->toRoute('myeconomic', array('action'=>'adduser'));
+        }
+
+        $year = new \DateTime();
+        $year = $year -> format('Y');
+        $year =  $this->getRequest()->getPost('year', $year);
+
+        $turnoverAll = $entityManager->getRepository('MyEconomic\Entity\Turnover')->findBy(array('user'=>$user));
+        $variableCostsAll = $entityManager->getRepository('MyEconomic\Entity\VariableCosts')->findBy(array('user'=>$user));
+        $financialItemsAll = $entityManager->getRepository('MyEconomic\Entity\FinancialItems')->findBy(array('user'=>$user));
+        $extraordinaryItemsAll = $entityManager->getRepository('MyEconomic\Entity\ExtraordinaryItems')->findBy(array('user'=>$user));
+        $directPayAll = $entityManager->getRepository('MyEconomic\Entity\DirectPay')->findBy(array('user'=>$user));
+        $companyTaxAll = $entityManager->getRepository('MyEconomic\Entity\CompanyTax')->findBy(array('user'=>$user));
+        $depreciationAll = $entityManager->getRepository('MyEconomic\Entity\Depreciation')->findBy(array('user'=>$user));
+        $overheadsAll = $entityManager->getRepository('MyEconomic\Entity\Overheads')->findBy(array('user'=>$user));
+        $otherDirectCostsAll = $entityManager->getRepository('MyEconomic\Entity\OtherDirectCosts')->findBy(array('user'=>$user));
+        
+        $years = array();
+        $profitMarginTotal = array();
+        $profitMarginAverage = array();
+        $profitMarginLast = array();
+        foreach($turnoverAll as $key => $turnover){
+            array_push($years, $turnover->getYear());
+            $tmp = json_decode($turnover->getTurnover());
+            $tmp2 = json_decode($variableCostsAll[$key]->getVariableCosts());
+            $tmp3 = json_decode($financialItemsAll[$key]->getFinancialItems());
+            $tmp4 = json_decode($extraordinaryItemsAll[$key]->getExtraordinaryItems());
+            $tmp5 = json_decode($directPayAll[$key]->getDirectPay());
+            $tmp6 = json_decode($companyTaxAll[$key]->getCompanyTax());
+            $tmp7 = json_decode($depreciationAll[$key]->getDepreciation());
+            $tmp8 = json_decode($overheadsAll[$key]->getOverheads());
+            $tmp9 = json_decode($otherDirectCostsAll[$key]->getOtherDirectCosts());
+            if (array_sum($tmp)) {
+                $total = (array_sum($tmp) - array_sum($tmp2) - array_sum($tmp3) - array_sum($tmp4) - array_sum($tmp5) - array_sum($tmp6) - array_sum($tmp7) - array_sum($tmp8) - array_sum($tmp9)) / array_sum($tmp);
+            } else {
+                $total = 0;
+            }            
+            array_push($profitMarginTotal, $total);
+            if($turnover->getYear()==$year || $turnover->getYear()==$year-1){
+                array_push($profitMarginAverage, $total/12);
+            };
+            if($turnover->getYear()==$year){
+                foreach ($tmp as $tmpkey => $value) {
+                    if ($value) {
+                        $profitMarginThis[] = ($value - $tmp2[$tmpkey] - $tmp3[$tmpkey] - $tmp4[$tmpkey] - $tmp5[$tmpkey] - $tmp6[$tmpkey] - $tmp7[$tmpkey] - $tmp8[$tmpkey] - $tmp9[$tmpkey]) / $value;
+                    } else {
+                        $profitMarginThis[] = 0;
+                    }                    
+                }      
+            } elseif ($turnover->getYear()==$year-1) {
+                foreach ($tmp as $tmpkey => $value) {
+                    if ($value) {
+                        $profitMarginLast[] = ($value - $tmp2[$tmpkey] - $tmp3[$tmpkey] - $tmp4[$tmpkey] - $tmp5[$tmpkey] - $tmp6[$tmpkey] - $tmp7[$tmpkey] - $tmp8[$tmpkey] - $tmp9[$tmpkey]) / $value;
+                    } else {
+                        $profitMarginLast[] = 0;
+                    }                    
+                }
+            }
+        }
+
+        if (!$profitMarginLast) {
+            array_unshift($profitMarginAverage, 0);
+            $profitMarginLast = array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+        }
+
+        $dif = array();
+        foreach($profitMarginThis as $key => $val){
+            if ($val < $profitMarginLast[$key]) {
+                array_push($dif, $key);
+            }
+        }
+
+        return array(
+            "year"                    => (int)$year,
+            "profitMarginThis"        => $profitMarginThis,
+            "profitMarginLast"        => $profitMarginLast,
+            "dif"                     => $dif,
+            "years"                   => $years,
+            "profitMarginTotal"       => $profitMarginTotal,
+            "profitMarginAverage"     => $profitMarginAverage);
     }
 }

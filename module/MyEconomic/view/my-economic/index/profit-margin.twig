@@ -1,0 +1,172 @@
+{% extends 'layout/layout.twig' %}
+
+{% block content %}
+<script src="http://cdn.zingchart.com/zingchart.min.js"></script>
+
+<script type="text/javascript">
+    window.onload = function () {
+
+        {# Generate Profit Margin chart current year #}
+
+        var chart{{ year }} = {
+            "type": "bar",
+            "title":{
+                "text": "Profit Margin for {{ year }}"
+            },
+            "scale-x":{
+                "labels":[
+                    "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+                ]
+            },
+            "series": [
+                { "values": [
+                    {% for turn in profitMarginThis %}
+                    {{ turn }},
+                    {% endfor %}
+                ] },
+            ]
+        };
+
+        {# Average Profit Margin by years chart #}
+        var chartYearsAverage = {
+            "type": "bar",
+            "title":{
+                "text": "Average Profit Margin by Years"
+            },
+            "scale-x":{
+                "labels":[
+                    {{ year-1 }}, {{ year }}
+                ]
+            },
+            "plot":{
+                "rules":[
+                    {
+                        "rule":"%p === 0 && %i === 0",
+                        "background-color":"#FFFF00"
+                    },
+                    {
+                        "rule":"%p == 0 && %i === 1",
+                        "background-color":"#696969"
+                    }
+                ]
+            },
+            "series": [
+                { "values": [
+                    {% for turn in profitMarginAverage %}
+                    {{ turn }},
+                    {% endfor %}
+                ] },
+            ]
+        };
+
+        /* Total Profit Margin by years chart */
+        var chartYearsTotal = {
+            "type": "bar",
+            "title":{
+                "text": "Total Profit Margin by Years"
+            },
+            "scale-x":{
+                "labels":[
+                    {% for y in years %}
+                    {{ y }},
+                    {% endfor %}
+                ]
+            },
+            "series": [
+                { "values": [
+                    {% for turn in profitMarginTotal %}
+                    {{ turn }},
+                    {% endfor %}
+                ] },
+            ]
+        };
+
+
+        var chartCompared = {
+            "type":"mixed",
+            "title":{
+                "text": "Profit Margin Compare: {{ year }} vs {{ year-1 }}"
+            },
+            "scale-x":{
+                "labels":[
+                    "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+                ]
+            },
+            "plot":{
+                "rules":[
+                    {% for d in dif %}
+                    {
+                        "rule":"%p === 0 && %i === {{ d }}",
+                        "background-color":"red"
+                    },
+                    {% endfor %}
+                    {
+                        "rule":"%p == 1",
+                        "line-color":"#FFFF00"
+                    }
+                ]
+            },
+            "series":[
+                {
+                    "type": "bar",
+                    "values": [
+                        {% for turn in profitMarginThis %}
+                        {{ turn }},
+                        {% endfor %}
+                    ],
+                    "hover-state":{
+                        "visible":0
+                    },
+                    "background-color":"#696969"
+                },
+                {
+                    "type": "line",
+                    "values": [
+                        {% for turn in profitMarginLast %}
+                        {{ turn }},
+                        {% endfor %}
+                    ],
+                    "line-color":"#FFFF00"
+                }
+            ]
+        };
+
+        zingchart.render({id: 'profitMarginByYearsAverage', data: chartYearsAverage });
+        zingchart.render({id: 'profitMarginByYears', data: chartYearsTotal });
+        zingchart.render({id: 'profitMargin{{ year }}', data: chart{{ year }} });
+        zingchart.render({id: 'profitMarginCompared', data: chartCompared });
+    }
+</script>
+<div class = "row">
+    <div class ="col-sm-6 col-sm-offset-3">
+        <form class="form" method = 'POST'>
+            <div class="row">
+                <div class="col-xs-6" style="text-align: right;">
+                    <button class="btn btn-success">Select year</button>
+                </div> 
+                <div class="col-xs-6">
+                    <select class="form-control" name='year'>
+                        {% for y in years %}
+                            <option value='{{ y }}' {% if y == year %}selected{% endif %}>{{ y }}</option>
+                        {% endfor %}
+                    </select>
+                </div>    
+            </div>  
+        </form>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-6">
+        <div id="profitMargin{{ year }}" style="height: 300px; width: 100%;"></div>
+    </div>
+    <div class="col-sm-6">
+        <div id="profitMarginCompared" style="height: 300px; width: 100%;"></div>
+    </div>
+    <div class="col-sm-6">
+        <div id="profitMarginByYearsAverage" style="height: 300px; width: 100%;"></div>
+    </div>
+    <div class="col-sm-6">
+        <div id="profitMarginByYears" style="height: 300px; width: 100%;"></div>
+    </div>
+</div>
+{% endblock %}
