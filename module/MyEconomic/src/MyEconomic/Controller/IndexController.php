@@ -783,4 +783,81 @@ class IndexController extends AbstractActionController
             "profitMarginTotal"       => $profitMarginTotal,
             "profitMarginAverage"     => $profitMarginAverage);
     }
+
+    /********************************
+     * Show Main charts page
+     *******************************/
+    public function mainAction(){
+        $user = $this->zfcUserAuthentication()->getIdentity();
+        $entityManager = $this->getServiceLocator()
+            ->get('doctrine.entitymanager.orm_default');
+        $eUser = $entityManager->getRepository('MyEconomic\Entity\EconomicUser')->findOneBy(array('user'=>$user));
+
+        if(empty($eUser)){
+            return $this->redirect()->toRoute('myeconomic', array('action'=>'adduser'));
+        }
+
+        $year = new \DateTime();
+        $tmp = $year -> format('Y');
+        $month = $year -> format('M');
+        $monthAlph = array("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec");
+        $monthNow = array_search($month, $monthAlph);
+        $year =  $this->getRequest()->getPost('year', $tmp);
+
+        //$monthNow = 0;
+        //$year = 2014;
+        
+        $turnoverAll = $entityManager->getRepository('MyEconomic\Entity\Turnover')->findBy(array('user'=>$user));
+        $variableCostsAll = $entityManager->getRepository('MyEconomic\Entity\VariableCosts')->findBy(array('user'=>$user));
+        $financialItemsAll = $entityManager->getRepository('MyEconomic\Entity\FinancialItems')->findBy(array('user'=>$user));
+        $extraordinaryItemsAll = $entityManager->getRepository('MyEconomic\Entity\ExtraordinaryItems')->findBy(array('user'=>$user));
+        
+        $turnover = array();
+        $contributionMargin = array();
+        $result = array();
+
+        foreach($turnoverAll as $key => $turn){
+            if ($year-1 == $turn->getYear()) {
+                $tmp = json_decode($turn->getTurnover());
+                $tmp2 = json_decode($variableCostsAll[$key]->getVariableCosts());
+                $tmp3 = json_decode($financialItemsAll[$key]->getFinancialItems());
+                $tmp4 = json_decode($extraordinaryItemsAll[$key]->getExtraordinaryItems());
+                foreach ($tmp as $tmpkey => $value) {
+                    if ($tmpkey >= $monthNow + 10) {
+                        $arrindex = $monthAlph[$tmpkey].' '.$turn->getYear();
+                        $turnover[$arrindex] = $value;
+                        $contributionMargin[$arrindex] = $value - $tmp2[$tmpkey];
+                        $result[$arrindex] = $tmp3[$tmpkey] + $tmp4[$tmpkey];
+                    }
+                }
+            }
+            if ($year == $turn->getYear()) {
+                $tmp = json_decode($turn->getTurnover());
+                $tmp2 = json_decode($variableCostsAll[$key]->getVariableCosts());
+                $tmp3 = json_decode($financialItemsAll[$key]->getFinancialItems());
+                $tmp4 = json_decode($extraordinaryItemsAll[$key]->getExtraordinaryItems());
+                foreach ($tmp as $tmpkey => $value) {
+                    if ($tmpkey >= $monthNow-2 && $tmpkey <= $monthNow) {
+                        $arrindex = $monthAlph[$tmpkey].' '.$turn->getYear();
+                        $turnover[$arrindex] = $value;
+                        $contributionMargin[$arrindex] = $value - $tmp2[$tmpkey];
+                        $result[$arrindex] = $tmp3[$tmpkey] + $tmp4[$tmpkey];
+                    }
+                }
+            }
+            
+        }
+
+        $turnoverTotal = array_sum($turnover);
+        $contributionMarginTotal = array_sum($contributionMargin);
+        $resultTotal = array_sum($result);
+
+        return array(            
+            "turnoverTotal"             => $turnoverTotal,
+            "turnover"                  => $turnover,
+            "contributionMarginTotal"   => $contributionMarginTotal,
+            "contributionMargin"        => $contributionMargin,
+            "resultTotal"               => $resultTotal,
+            "result"                    => $result); 
+    }
 }
