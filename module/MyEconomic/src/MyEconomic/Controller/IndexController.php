@@ -577,7 +577,7 @@ class IndexController extends AbstractActionController
             $tmp = json_decode($turnover->getTurnover());
             $tmp2 = json_decode($variableCostsAll[$key]->getVariableCosts());
             if (array_sum($tmp)) {
-                $total = (array_sum($tmp) - array_sum($tmp2)) / array_sum($tmp);
+                $total = (array_sum($tmp) - array_sum($tmp2)) / array_sum($tmp) * 100;
             } else {
                 $total = 0;
             }            
@@ -588,7 +588,7 @@ class IndexController extends AbstractActionController
             if($turnover->getYear()==$year){
                 foreach ($tmp as $tmpkey => $value) {
                     if ($value) {
-                        $contributionMarginThis[] = ($value - $tmp2[$tmpkey]) / $value;
+                        $contributionMarginThis[] = ($value - $tmp2[$tmpkey]) / $value  * 100;
                     } else {
                         $contributionMarginThis[] = 0;
                     }                    
@@ -596,7 +596,7 @@ class IndexController extends AbstractActionController
             } elseif ($turnover->getYear()==$year-1) {
                 foreach ($tmp as $tmpkey => $value) {
                     if ($value) {
-                        $contributionMarginLast[] = ($value - $tmp2[$tmpkey]) / $value;
+                        $contributionMarginLast[] = ($value - $tmp2[$tmpkey]) / $value * 100;
                     } else {
                         $contributionMarginLast[] = 0;
                     }                    
@@ -735,7 +735,7 @@ class IndexController extends AbstractActionController
             $tmp8 = json_decode($overheadsAll[$key]->getOverheads());
             $tmp9 = json_decode($otherDirectCostsAll[$key]->getOtherDirectCosts());
             if (array_sum($tmp)) {
-                $total = (array_sum($tmp) - array_sum($tmp2) - array_sum($tmp3) - array_sum($tmp4) - array_sum($tmp5) - array_sum($tmp6) - array_sum($tmp7) - array_sum($tmp8) - array_sum($tmp9)) / array_sum($tmp);
+                $total = (array_sum($tmp) - array_sum($tmp2) - array_sum($tmp3) - array_sum($tmp4) - array_sum($tmp5) - array_sum($tmp6) - array_sum($tmp7) - array_sum($tmp8) - array_sum($tmp9)) / array_sum($tmp) * 100;
             } else {
                 $total = 0;
             }            
@@ -746,7 +746,7 @@ class IndexController extends AbstractActionController
             if($turnover->getYear()==$year){
                 foreach ($tmp as $tmpkey => $value) {
                     if ($value) {
-                        $profitMarginThis[] = ($value - $tmp2[$tmpkey] - $tmp3[$tmpkey] - $tmp4[$tmpkey] - $tmp5[$tmpkey] - $tmp6[$tmpkey] - $tmp7[$tmpkey] - $tmp8[$tmpkey] - $tmp9[$tmpkey]) / $value;
+                        $profitMarginThis[] = ($value - $tmp2[$tmpkey] - $tmp3[$tmpkey] - $tmp4[$tmpkey] - $tmp5[$tmpkey] - $tmp6[$tmpkey] - $tmp7[$tmpkey] - $tmp8[$tmpkey] - $tmp9[$tmpkey]) / $value * 100;
                     } else {
                         $profitMarginThis[] = 0;
                     }                    
@@ -754,7 +754,7 @@ class IndexController extends AbstractActionController
             } elseif ($turnover->getYear()==$year-1) {
                 foreach ($tmp as $tmpkey => $value) {
                     if ($value) {
-                        $profitMarginLast[] = ($value - $tmp2[$tmpkey] - $tmp3[$tmpkey] - $tmp4[$tmpkey] - $tmp5[$tmpkey] - $tmp6[$tmpkey] - $tmp7[$tmpkey] - $tmp8[$tmpkey] - $tmp9[$tmpkey]) / $value;
+                        $profitMarginLast[] = ($value - $tmp2[$tmpkey] - $tmp3[$tmpkey] - $tmp4[$tmpkey] - $tmp5[$tmpkey] - $tmp6[$tmpkey] - $tmp7[$tmpkey] - $tmp8[$tmpkey] - $tmp9[$tmpkey]) / $value * 100;
                     } else {
                         $profitMarginLast[] = 0;
                     }                    

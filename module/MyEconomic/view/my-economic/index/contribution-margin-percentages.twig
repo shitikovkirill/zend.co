@@ -18,6 +18,9 @@
                     "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
                 ]
             },
+            "scale-y":{
+                "format": "%v%" /* Y-axis output in percentages */
+            },
             "series": [
                 { "values": [
                     {% for turn in contributionMarginThis %}
@@ -38,6 +41,9 @@
                     {{ year-1 }}, {{ year }}
                 ]
             },
+            "scale-y":{
+                "format": "%v%" /* Y-axis output in percentages */
+            },
             "plot":{
                 "rules":[
                     {
@@ -49,7 +55,7 @@
                         "background-color":"#696969"
                     }
                 ]
-            },
+            },            
             "series": [
                 { "values": [
                     {% for turn in contributionMarginAverage %}
@@ -72,6 +78,9 @@
                     {% endfor %}
                 ]
             },
+            "scale-y":{
+                "format": "%v%" /* Y-axis output in percentages */
+            },
             "series": [
                 { "values": [
                     {% for turn in contributionMarginTotal %}
@@ -91,6 +100,9 @@
                 "labels":[
                     "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
                 ]
+            },
+            "scale-y":{
+                "format": "%v%" /* Y-axis output in percentages */
             },
             "plot":{
                 "rules":[

@@ -18,6 +18,9 @@
                     "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
                 ]
             },
+            "scale-y":{
+                "format": "%v%" /* Y-axis output in percentages */
+            },
             "series": [
                 { "values": [
                     {% for turn in profitMarginThis %}
@@ -37,6 +40,9 @@
                 "labels":[
                     {{ year-1 }}, {{ year }}
                 ]
+            },
+            "scale-y":{
+                "format": "%v%" /* Y-axis output in percentages */
             },
             "plot":{
                 "rules":[
@@ -72,6 +78,9 @@
                     {% endfor %}
                 ]
             },
+            "scale-y":{
+                "format": "%v%" /* Y-axis output in percentages */
+            },
             "series": [
                 { "values": [
                     {% for turn in profitMarginTotal %}
@@ -91,6 +100,9 @@
                 "labels":[
                     "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
                 ]
+            },
+            "scale-y":{
+                "format": "%v%" /* Y-axis output in percentages */
             },
             "plot":{
                 "rules":[
