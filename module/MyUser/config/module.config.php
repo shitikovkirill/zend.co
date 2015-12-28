@@ -1,5 +1,11 @@
 <?php
 return array(
+
+    'usercrud' => array(
+        'userEntity' => 'MyUser\Entity\User',
+        'roleEntity' => 'MyUser\Entity\Role'
+    ),
+
     'doctrine' => array(
         'driver' => array(
             'zfcuser_entity' => array(
@@ -34,38 +40,65 @@ return array(
             ),
         ),
     ),
+
     'controllers' => array(
         'invokables' => array(
-            'MyUser\Controller\Index' => 'MyUser\Controller\IndexController',
+            'MyUser\Controller\User' => 'MyUser\Controller\UserController',
+            'MyUser\Controller\Role' => 'MyUser\Controller\RoleController'
         ),
     ),
+
     'router' => array(
         'routes' => array(
-            'myuser' => array(
-                'type' => 'Literal',
-                'options' => array(
-                    'route' => '/myuser',
-                    'defaults' => array(
-                        '__NAMESPACE__' => 'MyUser\Controller',
-                        'controller' => 'Index',
-                        'action' => 'index',
-                    ),
-                ),
-                'may_terminate' => true,
+            'zfcadmin' => array(
                 'child_routes' => array(
-                    'default' => array(
-                        'type' => 'Segment',
+                    'user-crud' => array(
+                        'type' => 'segment',
                         'options' => array(
-                            'route' => '/[:controller[/:action]]',
-                            'constraints' => array(
-                                'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
-                                'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
-                            ),
+                            'route' => '/users[/:action][/:id]',
                             'defaults' => array(
+                                'controller' => 'MyUser\Controller\User',
+                                'action' => 'index',
                             ),
                         ),
                     ),
                 ),
+            ),
+            'user-crud' => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route' => '/admin/users[/:action][/:id]',
+                    'defaults' => array(
+                        '__NAMESPACE__' => 'MyUser\Controller',
+                        'controller' => 'User',
+                        'action' => 'index',
+                    ),
+                ),
+                'may_terminate' => true,
+            ),
+            'user-crud-password' => array(
+                'type' => 'literal',
+                'options' => array(
+                    'route' => '/admin/password',
+                    'defaults' => array(
+                        '__NAMESPACE__' => 'MyUser\Controller',
+                        'controller' => 'User',
+                        'action' => 'password',
+                    ),
+                ),
+                'may_terminate' => true,
+            ),
+            'user-crud-role' => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route' => '/admin/roles[/:action][/:id]',
+                    'defaults' => array(
+                        '__NAMESPACE__' => 'MyUser\Controller',
+                        'controller' => 'Role',
+                        'action' => 'index',
+                    ),
+                ),
+                'may_terminate' => true,
             ),
         ),
     ),

@@ -33,7 +33,8 @@ return array(
                     'roles' => array('user','admin'),
                 ),
                 array('controller' => array('Application\Controller\Index','MyEconomic\Controller\Index'), 'roles' => array()),
-                array('controller'=>array('ZfcAdmin\Controller\AdminController',), 'roles'=>'admin'),
+                array('controller'=>array('ZfcAdmin\Controller\AdminController',
+                    'MyUser\Controller\User'), 'roles'=>'admin'),
 
                 array('controller' => 'HtProfileImage\ProfileImage', 'roles' => array()),
                 array('controller' => 'HtImgModule\Controller\ImageController', 'roles' => array()),
