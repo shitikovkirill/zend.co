@@ -435,12 +435,13 @@ class IndexController extends AbstractActionController
         $years = array();
         $turnoverTotal = array();
         $turnoverAverage = array();
+        $turnoverLast = array();
         foreach($turnoverAll as $turnover){
             array_push($years, $turnover->getYear());
             $tmp = json_decode($turnover->getTurnover());
             $total = array_sum($tmp);
             array_push($turnoverTotal, $total);
-            if($turnover->getYear()==$year || $turnover->getYear()==$year-1){
+            if($turnover->getYear() == $year || $turnover->getYear() == $year-1){
                 array_push($turnoverAverage, $total/12);
 
             };
@@ -449,6 +450,11 @@ class IndexController extends AbstractActionController
             }elseif($turnover->getYear()==$year-1){
                 $turnoverLast=$tmp;
             }
+        }
+
+        if (!$turnoverLast) {
+            array_unshift($turnoverAverage, 0);
+            $turnoverLast = array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
         }
 
         $dif = array();
@@ -491,6 +497,7 @@ class IndexController extends AbstractActionController
         $years = array();
         $contributionMarginTotal = array();
         $contributionMarginAverage = array();
+        $contributionMarginLast = array();
         foreach($turnoverAll as $key => $turnover){
             array_push($years, $turnover->getYear());
             $tmp = json_decode($turnover->getTurnover());
@@ -509,6 +516,11 @@ class IndexController extends AbstractActionController
                     $contributionMarginLast[] = $value - $tmp2[$tmpkey];
                 }
             }
+        }
+
+        if (!$contributionMarginLast) {
+            array_unshift($contributionMarginAverage, 0);
+            $contributionMarginLast = array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
         }
 
         $dif = array();
@@ -551,6 +563,7 @@ class IndexController extends AbstractActionController
         $years = array();
         $contributionMarginTotal = array();
         $contributionMarginAverage = array();
+        $contributionMarginLast = array();
         foreach($turnoverAll as $key => $turnover){
             array_push($years, $turnover->getYear());
             $tmp = json_decode($turnover->getTurnover());
@@ -581,6 +594,11 @@ class IndexController extends AbstractActionController
                     }                    
                 }
             }
+        }
+
+        if (!$contributionMarginLast) {
+            array_unshift($contributionMarginAverage, 0);
+            $contributionMarginLast = array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
         }
 
         $dif = array();
@@ -623,6 +641,7 @@ class IndexController extends AbstractActionController
         $years = array();
         $resultTotal = array();
         $resultAverage = array();
+        $resultLast = array();
         foreach($financialItemsAll as $key => $item){
             array_push($years, $item->getYear());
             $tmp = json_decode($item->getFinancialItems());
@@ -641,6 +660,11 @@ class IndexController extends AbstractActionController
                     $resultLast[] = $value + $tmp2[$tmpkey];
                 }
             }
+        }
+
+        if (!$resultLast) {
+            array_unshift($resultAverage, 0);
+            $resultLast = array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
         }
 
         $dif = array();
