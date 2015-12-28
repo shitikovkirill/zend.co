@@ -6,12 +6,12 @@
 <script type="text/javascript">
     window.onload = function () {
 
-        {# Generate turnover chart current year #}
+        {# Generate result chart current year #}
 
         var chart{{ year }} = {
             "type": "bar",
             "title":{
-                "text": "Turnover for {{ year }}"
+                "text": "Result for {{ year }}"
             },
             "scale-x":{
                 "labels":[
@@ -20,18 +20,18 @@
             },
             "series": [
                 { "values": [
-                    {% for turn in turnoverThis %}
+                    {% for turn in resultThis %}
                     {{ turn }},
                     {% endfor %}
                 ] },
             ]
         };
 
-        {# Average turnover by years chart #}
+        {# Average result by years chart #}
         var chartYearsAverage = {
             "type": "bar",
             "title":{
-                "text": "Average Turnover by Years"
+                "text": "Average Result by Years"
             },
             "scale-x":{
                 "labels":[
@@ -52,18 +52,18 @@
             },
             "series": [
                 { "values": [
-                    {% for turn in turnoverAverage %}
+                    {% for turn in resultAverage %}
                     {{ turn }},
                     {% endfor %}
                 ] },
             ]
         };
 
-        /* Total turnover by years chart */
+        /* Total result by years chart */
         var chartYearsTotal = {
             "type": "bar",
             "title":{
-                "text": "Total Turnover by Years"
+                "text": "Total Result by Years"
             },
             "scale-x":{
                 "labels":[
@@ -74,7 +74,7 @@
             },
             "series": [
                 { "values": [
-                    {% for turn in turnoverTotal %}
+                    {% for turn in resultTotal %}
                     {{ turn }},
                     {% endfor %}
                 ] },
@@ -85,7 +85,7 @@
         var chartCompared = {
             "type":"mixed",
             "title":{
-                "text": "Turnover Compare: {{ year }} vs {{ year-1 }}"
+                "text": "Result Compare: {{ year }} vs {{ year-1 }}"
             },
             "scale-x":{
                 "labels":[
@@ -110,7 +110,7 @@
                 {
                     "type": "bar",
                     "values": [
-                        {% for turn in turnoverThis %}
+                        {% for turn in resultThis %}
                         {{ turn }},
                         {% endfor %}
                     ],
@@ -122,7 +122,7 @@
                 {
                     "type": "line",
                     "values": [
-                        {% for turn in turnoverLast %}
+                        {% for turn in resultLast %}
                         {{ turn }},
                         {% endfor %}
                     ],
@@ -131,10 +131,10 @@
             ]
         };
 
-        zingchart.render({id: 'turnoverByYearsAverage', data: chartYearsAverage });
-        zingchart.render({id: 'turnoverByYears', data: chartYearsTotal });
-        zingchart.render({id: 'turnover{{ year }}', data: chart{{ year }} });
-        zingchart.render({id: 'turnoverCompared', data: chartCompared });
+        zingchart.render({id: 'resultByYearsAverage', data: chartYearsAverage });
+        zingchart.render({id: 'resultByYears', data: chartYearsTotal });
+        zingchart.render({id: 'result{{ year }}', data: chart{{ year }} });
+        zingchart.render({id: 'resultCompared', data: chartCompared });
     }
 </script>
 <div class = "row">
@@ -157,16 +157,16 @@
 </div>
 <div class="row">
     <div class="col-sm-6">
-        <div id="turnover{{ year }}" style="height: 300px; width: 100%;"></div>
+        <div id="result{{ year }}" style="height: 300px; width: 100%;"></div>
     </div>
     <div class="col-sm-6">
-        <div id="turnoverCompared" style="height: 300px; width: 100%;"></div>
+        <div id="resultCompared" style="height: 300px; width: 100%;"></div>
     </div>
     <div class="col-sm-6">
-        <div id="turnoverByYearsAverage" style="height: 300px; width: 100%;"></div>
+        <div id="resultByYearsAverage" style="height: 300px; width: 100%;"></div>
     </div>
     <div class="col-sm-6">
-        <div id="turnoverByYears" style="height: 300px; width: 100%;"></div>
+        <div id="resultByYears" style="height: 300px; width: 100%;"></div>
     </div>
 </div>
 {% endblock %}

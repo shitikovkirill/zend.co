@@ -6,12 +6,12 @@
 <script type="text/javascript">
     window.onload = function () {
 
-        {# Generate turnover chart current year #}
+        {# Generate contributionMargin chart current year #}
 
         var chart{{ year }} = {
             "type": "bar",
             "title":{
-                "text": "Turnover for {{ year }}"
+                "text": "Contribution Margin for {{ year }}"
             },
             "scale-x":{
                 "labels":[
@@ -20,18 +20,18 @@
             },
             "series": [
                 { "values": [
-                    {% for turn in turnoverThis %}
+                    {% for turn in contributionMarginThis %}
                     {{ turn }},
                     {% endfor %}
                 ] },
             ]
         };
 
-        {# Average turnover by years chart #}
+        {# Average contributionMargin by years chart #}
         var chartYearsAverage = {
             "type": "bar",
             "title":{
-                "text": "Average Turnover by Years"
+                "text": "Average Contribution Margin by Years"
             },
             "scale-x":{
                 "labels":[
@@ -52,18 +52,18 @@
             },
             "series": [
                 { "values": [
-                    {% for turn in turnoverAverage %}
+                    {% for turn in contributionMarginAverage %}
                     {{ turn }},
                     {% endfor %}
                 ] },
             ]
         };
 
-        /* Total turnover by years chart */
+        /* Total contributionMargin by years chart */
         var chartYearsTotal = {
             "type": "bar",
             "title":{
-                "text": "Total Turnover by Years"
+                "text": "Total Contribution Margin by Years"
             },
             "scale-x":{
                 "labels":[
@@ -74,7 +74,7 @@
             },
             "series": [
                 { "values": [
-                    {% for turn in turnoverTotal %}
+                    {% for turn in contributionMarginTotal %}
                     {{ turn }},
                     {% endfor %}
                 ] },
@@ -85,7 +85,7 @@
         var chartCompared = {
             "type":"mixed",
             "title":{
-                "text": "Turnover Compare: {{ year }} vs {{ year-1 }}"
+                "text": "Contribution Margin Compare: {{ year }} vs {{ year-1 }}"
             },
             "scale-x":{
                 "labels":[
@@ -110,7 +110,7 @@
                 {
                     "type": "bar",
                     "values": [
-                        {% for turn in turnoverThis %}
+                        {% for turn in contributionMarginThis %}
                         {{ turn }},
                         {% endfor %}
                     ],
@@ -122,7 +122,7 @@
                 {
                     "type": "line",
                     "values": [
-                        {% for turn in turnoverLast %}
+                        {% for turn in contributionMarginLast %}
                         {{ turn }},
                         {% endfor %}
                     ],
@@ -131,10 +131,10 @@
             ]
         };
 
-        zingchart.render({id: 'turnoverByYearsAverage', data: chartYearsAverage });
-        zingchart.render({id: 'turnoverByYears', data: chartYearsTotal });
-        zingchart.render({id: 'turnover{{ year }}', data: chart{{ year }} });
-        zingchart.render({id: 'turnoverCompared', data: chartCompared });
+        zingchart.render({id: 'contributionMarginByYearsAverage', data: chartYearsAverage });
+        zingchart.render({id: 'contributionMarginByYears', data: chartYearsTotal });
+        zingchart.render({id: 'contributionMargin{{ year }}', data: chart{{ year }} });
+        zingchart.render({id: 'contributionMarginCompared', data: chartCompared });
     }
 </script>
 <div class = "row">
@@ -157,16 +157,16 @@
 </div>
 <div class="row">
     <div class="col-sm-6">
-        <div id="turnover{{ year }}" style="height: 300px; width: 100%;"></div>
+        <div id="contributionMargin{{ year }}" style="height: 300px; width: 100%;"></div>
     </div>
     <div class="col-sm-6">
-        <div id="turnoverCompared" style="height: 300px; width: 100%;"></div>
+        <div id="contributionMarginCompared" style="height: 300px; width: 100%;"></div>
     </div>
     <div class="col-sm-6">
-        <div id="turnoverByYearsAverage" style="height: 300px; width: 100%;"></div>
+        <div id="contributionMarginByYearsAverage" style="height: 300px; width: 100%;"></div>
     </div>
     <div class="col-sm-6">
-        <div id="turnoverByYears" style="height: 300px; width: 100%;"></div>
+        <div id="contributionMarginByYears" style="height: 300px; width: 100%;"></div>
     </div>
 </div>
 {% endblock %}
