@@ -1,4 +1,11 @@
-<h1><?php echo $this->translate('Sign In'); ?></h1>
+{% extends 'layout/layout_external.twig' %}
+
+{% block page_heading %}
+    <div class="chart-page-header"><?php echo $this->translate('Sign In'); ?></div>
+{% endblock page_heading %}
+
+{% block content %}
+
 
 <?php
 $form = $this->loginForm;
@@ -9,7 +16,7 @@ $form->setAttribute('autocomplete', 'off');
 ?>
 
 <?php echo $this->form()->openTag($form) ?>
-qqqqqqqqqqqqqqqqq
+
     <dl class="zend_form">
         <?php echo $this->formElementErrors($form->get('identity')) ?>
 
@@ -31,3 +38,4 @@ qqqqqqqqqqqqqqqqq
 <?php if ($this->enableRegistration) : ?>
 <?php echo $this->translate('Not registered?'); ?> <a href="<?php echo $this->url('zfcuser/register') . ($this->redirect ? '?redirect='.$this->escapeUrl($this->redirect) : '') ?>"><?php echo $this->translate('Sign up!'); ?></a>
 <?php endif; ?>
+{% endblock %}

@@ -40,6 +40,12 @@ class User implements UserInterface, RoleProviderInterface
 
     /**
      * @var string
+     * @ORM\Column(type="string", length=255, unique=true, nullable=true)
+     */
+    protected $avatar;
+
+    /**
+     * @var string
      * @ORM\Column(type="string", unique=true,  length=255)
      */
     protected $email;
@@ -122,6 +128,28 @@ class User implements UserInterface, RoleProviderInterface
     public function setUsername($username)
     {
         $this->username = $username;
+    }
+
+    /**
+     * Get avatar.
+     *
+     * @return string
+     */
+    public function getAvatar()
+    {
+        return $this->avatar;
+    }
+
+    /**
+     * Set avatar.
+     *
+     * @param string $avatar
+     *
+     * @return void
+     */
+    public function setAvatar($avatar)
+    {
+        $this->avatar = $avatar;
     }
 
     /**

@@ -64,42 +64,42 @@
         <div class="sidebar">
             <!-- BEGIN RPOFILE -->
             {% block profile %}
-                {% set vars = {'img': '/assets/img/avatar.jpg', 'info':'1', 'name':'ttttt'} %}
+                {% set vars = {'img': user.avatar, 'info':'0', 'name': user.email} %}
                 {% include 'layout/profile.twig' with vars %}
             {% endblock profile %}
             <!-- END RPOFILE -->
             <!-- BEGIN NAV -->
-            <div class="title">Navigation</div>
+            <div class="title">Charts Pages</div>
             <ul class="nav-sidebar">
                 {% block navigation %}
-                    <li>
+                    <li {% if currentPath == 'Main' %}class="active"{% endif %}>
                         <a href="{{ url('myeconomic', {'action': 'main'}) }}">
-                            <i class="ion-home"></i> <span>Main</span>
+                            <i class="ion-pie-graph"></i> <span>Main</span>
                         </a>
                     </li>
-                    <li class="active">
+                    <li {% if currentPath == 'Turnover' %}class="active"{% endif %}>
                         <a href="{{ url('myeconomic', {'action': 'turnover'}) }}">
-                            <i class="ion-home"></i> <span>Turnover</span>
+                            <i class="ion-pie-graph"></i> <span>Turnover</span>
                         </a>
                     </li>
-                    <li>
+                    <li {% if currentPath == 'Contribution Margin' %}class="active"{% endif %}>
                         <a href="{{ url('myeconomic', {'action': 'contributionMargin'}) }}">
-                            <i class="ion-home"></i> <span>Contribution Margin</span>
+                            <i class="ion-pie-graph"></i> <span>Contribution Margin</span>
                         </a>
                     </li>
-                    <li>
+                    <li {% if currentPath == 'Contribution Margin in %' %}class="active"{% endif %}>
                         <a href="{{ url('myeconomic', {'action': 'contributionMarginPercentages'}) }}">
-                            <i class="ion-home"></i> <span>Contribution Margin in %</span>
+                            <i class="ion-pie-graph"></i> <span>Contribution Margin in %</span>
                         </a>
                     </li>
-                    <li>
+                    <li {% if currentPath == 'Result' %}class="active"{% endif %}>
                         <a href="{{ url('myeconomic', {'action': 'result'}) }}">
-                            <i class="ion-home"></i> <span>Result</span>
+                            <i class="ion-pie-graph"></i> <span>Result</span>
                         </a>
                     </li>
-                    <li>
+                    <li {% if currentPath == 'Profit Margin' %}class="active"{% endif %}>
                         <a href="{{ url('myeconomic', {'action': 'profitMargin'}) }}">
-                            <i class="ion-home"></i> <span>Profit Margin</span>
+                            <i class="ion-pie-graph"></i> <span>Profit Margin</span>
                         </a>
                     </li>
                 {% endblock navigation %}

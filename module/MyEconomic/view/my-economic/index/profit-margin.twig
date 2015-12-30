@@ -1,8 +1,45 @@
 {% extends 'layout/layout.twig' %}
 
-{% block content %}
-<script src="http://cdn.zingchart.com/zingchart.min.js"></script>
+{% block page_heading %}
+    <div class="chart-page-header">Profit Margin</div>
+{% endblock page_heading %}
 
+{% block content %}
+<div class = "row">
+    <div class ="col-sm-6 col-sm-offset-3">
+        <form class="form" method = 'POST'>
+            <div class="row">
+                <div class="col-xs-6" style="text-align: right;">
+                    <button class="btn btn-success">Select year</button>
+                </div> 
+                <div class="col-xs-6">
+                    <select class="form-control" name='year'>
+                        {% for y in years %}
+                            <option value='{{ y }}' {% if y == year %}selected{% endif %}>{{ y }}</option>
+                        {% endfor %}
+                    </select>
+                </div>    
+            </div>  
+        </form>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-6">
+        <div id="profitMargin{{ year }}" style="height: 300px; width: 100%;"></div>
+    </div>
+    <div class="col-sm-6">
+        <div id="profitMarginCompared" style="height: 300px; width: 100%;"></div>
+    </div>
+    <div class="col-sm-6">
+        <div id="profitMarginByYearsAverage" style="height: 300px; width: 100%;"></div>
+    </div>
+    <div class="col-sm-6">
+        <div id="profitMarginByYears" style="height: 300px; width: 100%;"></div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
 <script type="text/javascript">
     window.onload = function () {
 
@@ -10,6 +47,7 @@
 
         var chart{{ year }} = {
             "type": "bar",
+            "backgroundColor": "#f5f5f5",
             "title":{
                 "text": "Profit Margin for {{ year }}"
             },
@@ -33,6 +71,7 @@
         {# Average Profit Margin by years chart #}
         var chartYearsAverage = {
             "type": "bar",
+            "backgroundColor": "#f5f5f5",
             "title":{
                 "text": "Average Profit Margin by Years"
             },
@@ -68,6 +107,7 @@
         /* Total Profit Margin by years chart */
         var chartYearsTotal = {
             "type": "bar",
+            "backgroundColor": "#f5f5f5",
             "title":{
                 "text": "Total Profit Margin by Years"
             },
@@ -93,6 +133,7 @@
 
         var chartCompared = {
             "type":"mixed",
+            "backgroundColor": "#f5f5f5",
             "title":{
                 "text": "Profit Margin Compare: {{ year }} vs {{ year-1 }}"
             },
@@ -149,36 +190,4 @@
         zingchart.render({id: 'profitMarginCompared', data: chartCompared });
     }
 </script>
-<div class = "row">
-    <div class ="col-sm-6 col-sm-offset-3">
-        <form class="form" method = 'POST'>
-            <div class="row">
-                <div class="col-xs-6" style="text-align: right;">
-                    <button class="btn btn-success">Select year</button>
-                </div> 
-                <div class="col-xs-6">
-                    <select class="form-control" name='year'>
-                        {% for y in years %}
-                            <option value='{{ y }}' {% if y == year %}selected{% endif %}>{{ y }}</option>
-                        {% endfor %}
-                    </select>
-                </div>    
-            </div>  
-        </form>
-    </div>
-</div>
-<div class="row">
-    <div class="col-sm-6">
-        <div id="profitMargin{{ year }}" style="height: 300px; width: 100%;"></div>
-    </div>
-    <div class="col-sm-6">
-        <div id="profitMarginCompared" style="height: 300px; width: 100%;"></div>
-    </div>
-    <div class="col-sm-6">
-        <div id="profitMarginByYearsAverage" style="height: 300px; width: 100%;"></div>
-    </div>
-    <div class="col-sm-6">
-        <div id="profitMarginByYears" style="height: 300px; width: 100%;"></div>
-    </div>
-</div>
-{% endblock %}
+{% endblock javascripts %}

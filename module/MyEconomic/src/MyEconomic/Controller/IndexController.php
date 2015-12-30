@@ -479,7 +479,9 @@ class IndexController extends AbstractActionController
             "dif"                   => $dif,
             "years"                 => $years,
             "turnoverTotal"         => $turnoverTotal,
-            "turnoverAverage"       => $turnoverAverage);
+            "turnoverAverage"       => $turnoverAverage,
+            "currentPath"           => 'Turnover',
+            "user"                  => $user);
     }
 
     /********************************
@@ -545,7 +547,9 @@ class IndexController extends AbstractActionController
             "dif"                       => $dif,
             "years"                     => $years,
             "contributionMarginTotal"   => $contributionMarginTotal,
-            "contributionMarginAverage" => $contributionMarginAverage);
+            "contributionMarginAverage" => $contributionMarginAverage,
+            "currentPath"               => 'Contribution Margin',
+            "user"                      => $user);
     }
 
     /********************************
@@ -623,7 +627,9 @@ class IndexController extends AbstractActionController
             "dif"                       => $dif,
             "years"                     => $years,
             "contributionMarginTotal"   => $contributionMarginTotal,
-            "contributionMarginAverage" => $contributionMarginAverage);
+            "contributionMarginAverage" => $contributionMarginAverage,
+            "currentPath"               => 'Contribution Margin in %',
+            "user"                      => $user);
     }
 
     /********************************
@@ -689,7 +695,9 @@ class IndexController extends AbstractActionController
             "dif"               => $dif,
             "years"             => $years,
             "resultTotal"       => $resultTotal,
-            "resultAverage"     => $resultAverage);
+            "resultAverage"     => $resultAverage,
+            "currentPath"       => 'Result',
+            "user"              => $user);
     }
 
     /********************************
@@ -781,7 +789,9 @@ class IndexController extends AbstractActionController
             "dif"                     => $dif,
             "years"                   => $years,
             "profitMarginTotal"       => $profitMarginTotal,
-            "profitMarginAverage"     => $profitMarginAverage);
+            "profitMarginAverage"     => $profitMarginAverage,
+            "currentPath"             => 'Profit Margin',
+            "user"                    => $user);
     }
 
     /********************************
@@ -852,12 +862,16 @@ class IndexController extends AbstractActionController
         $contributionMarginTotal = array_sum($contributionMargin);
         $resultTotal = array_sum($result);
 
+        //var_dump($user);
+
         return array(            
             "turnoverTotal"             => $turnoverTotal,
             "turnover"                  => $turnover,
             "contributionMarginTotal"   => $contributionMarginTotal,
             "contributionMargin"        => $contributionMargin,
             "resultTotal"               => $resultTotal,
-            "result"                    => $result); 
+            "result"                    => $result,
+            "currentPath"               => 'Main',
+            "user"                      => $user);
     }
 }

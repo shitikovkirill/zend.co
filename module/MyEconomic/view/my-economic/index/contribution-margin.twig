@@ -1,142 +1,10 @@
 {% extends 'layout/layout.twig' %}
 
+{% block page_heading %}
+    <div class="chart-page-header">Contribution Margin</div>
+{% endblock page_heading %}
+
 {% block content %}
-<script src="http://cdn.zingchart.com/zingchart.min.js"></script>
-
-<script type="text/javascript">
-    window.onload = function () {
-
-        {# Generate contributionMargin chart current year #}
-
-        var chart{{ year }} = {
-            "type": "bar",
-            "title":{
-                "text": "Contribution Margin for {{ year }}"
-            },
-            "scale-x":{
-                "labels":[
-                    "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-                ]
-            },
-            "series": [
-                { "values": [
-                    {% for turn in contributionMarginThis %}
-                    {{ turn }},
-                    {% endfor %}
-                ] },
-            ]
-        };
-
-        {# Average contributionMargin by years chart #}
-        var chartYearsAverage = {
-            "type": "bar",
-            "title":{
-                "text": "Average Contribution Margin by Years"
-            },
-            "scale-x":{
-                "labels":[
-                    {{ year-1 }}, {{ year }}
-                ]
-            },
-            "plot":{
-                "rules":[
-                    {
-                        "rule":"%p === 0 && %i === 0",
-                        "background-color":"#FFFF00"
-                    },
-                    {
-                        "rule":"%p == 0 && %i === 1",
-                        "background-color":"#696969"
-                    }
-                ]
-            },
-            "series": [
-                { "values": [
-                    {% for turn in contributionMarginAverage %}
-                    {{ turn }},
-                    {% endfor %}
-                ] },
-            ]
-        };
-
-        /* Total contributionMargin by years chart */
-        var chartYearsTotal = {
-            "type": "bar",
-            "title":{
-                "text": "Total Contribution Margin by Years"
-            },
-            "scale-x":{
-                "labels":[
-                    {% for y in years %}
-                    {{ y }},
-                    {% endfor %}
-                ]
-            },
-            "series": [
-                { "values": [
-                    {% for turn in contributionMarginTotal %}
-                    {{ turn }},
-                    {% endfor %}
-                ] },
-            ]
-        };
-
-
-        var chartCompared = {
-            "type":"mixed",
-            "title":{
-                "text": "Contribution Margin Compare: {{ year }} vs {{ year-1 }}"
-            },
-            "scale-x":{
-                "labels":[
-                    "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-                ]
-            },
-            "plot":{
-                "rules":[
-                    {% for d in dif %}
-                    {
-                        "rule":"%p === 0 && %i === {{ d }}",
-                        "background-color":"red"
-                    },
-                    {% endfor %}
-                    {
-                        "rule":"%p == 1",
-                        "line-color":"#FFFF00"
-                    }
-                ]
-            },
-            "series":[
-                {
-                    "type": "bar",
-                    "values": [
-                        {% for turn in contributionMarginThis %}
-                        {{ turn }},
-                        {% endfor %}
-                    ],
-                    "hover-state":{
-                        "visible":0
-                    },
-                    "background-color":"#696969"
-                },
-                {
-                    "type": "line",
-                    "values": [
-                        {% for turn in contributionMarginLast %}
-                        {{ turn }},
-                        {% endfor %}
-                    ],
-                    "line-color":"#FFFF00"
-                }
-            ]
-        };
-
-        zingchart.render({id: 'contributionMarginByYearsAverage', data: chartYearsAverage });
-        zingchart.render({id: 'contributionMarginByYears', data: chartYearsTotal });
-        zingchart.render({id: 'contributionMargin{{ year }}', data: chart{{ year }} });
-        zingchart.render({id: 'contributionMarginCompared', data: chartCompared });
-    }
-</script>
 <div class = "row">
     <div class ="col-sm-6 col-sm-offset-3">
         <form class="form" method = 'POST'>
@@ -170,3 +38,144 @@
     </div>
 </div>
 {% endblock %}
+
+{% block javascripts %}
+<script type="text/javascript">
+    window.onload = function () {
+
+        {# Generate contributionMargin chart current year #}
+
+        var chart{{ year }} = {
+            "type": "bar",
+            "backgroundColor": "#f5f5f5",
+            "title":{
+                "text": "Contribution Margin for {{ year }}"
+            },
+            "scale-x":{
+                "labels":[
+                    "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+                ]
+            },
+            "series": [
+                { "values": [
+                    {% for turn in contributionMarginThis %}
+                    {{ turn }},
+                    {% endfor %}
+                ] },
+            ]
+        };
+
+        {# Average contributionMargin by years chart #}
+        var chartYearsAverage = {
+            "type": "bar",
+            "backgroundColor": "#f5f5f5",
+            "title":{
+                "text": "Average Contribution Margin by Years"
+            },
+            "scale-x":{
+                "labels":[
+                    {{ year-1 }}, {{ year }}
+                ]
+            },
+            "plot":{
+                "rules":[
+                    {
+                        "rule":"%p === 0 && %i === 0",
+                        "background-color":"#FFFF00"
+                    },
+                    {
+                        "rule":"%p == 0 && %i === 1",
+                        "background-color":"#696969"
+                    }
+                ]
+            },
+            "series": [
+                { "values": [
+                    {% for turn in contributionMarginAverage %}
+                    {{ turn }},
+                    {% endfor %}
+                ] },
+            ]
+        };
+
+        /* Total contributionMargin by years chart */
+        var chartYearsTotal = {
+            "type": "bar",
+            "backgroundColor": "#f5f5f5",
+            "title":{
+                "text": "Total Contribution Margin by Years"
+            },
+            "scale-x":{
+                "labels":[
+                    {% for y in years %}
+                    {{ y }},
+                    {% endfor %}
+                ]
+            },
+            "series": [
+                { "values": [
+                    {% for turn in contributionMarginTotal %}
+                    {{ turn }},
+                    {% endfor %}
+                ] },
+            ]
+        };
+
+
+        var chartCompared = {
+            "type":"mixed",
+            "backgroundColor": "#f5f5f5",
+            "title":{
+                "text": "Contribution Margin Compare: {{ year }} vs {{ year-1 }}"
+            },
+            "scale-x":{
+                "labels":[
+                    "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+                ]
+            },
+            "plot":{
+                "rules":[
+                    {% for d in dif %}
+                    {
+                        "rule":"%p === 0 && %i === {{ d }}",
+                        "background-color":"red"
+                    },
+                    {% endfor %}
+                    {
+                        "rule":"%p == 1",
+                        "line-color":"#FFFF00"
+                    }
+                ]
+            },
+            "series":[
+                {
+                    "type": "bar",                    
+                    "values": [
+                        {% for turn in contributionMarginThis %}
+                        {{ turn }},
+                        {% endfor %}
+                    ],
+                    "hover-state":{
+                        "visible":0
+                    },
+                    "background-color":"#696969"
+                },
+                {
+                    "type": "line",
+                    "values": [
+                        {% for turn in contributionMarginLast %}
+                        {{ turn }},
+                        {% endfor %}
+                    ],
+                    "line-color":"#FFFF00"
+                }
+            ]
+        };
+
+        zingchart.render({id: 'contributionMarginByYearsAverage', data: chartYearsAverage });
+        zingchart.render({id: 'contributionMarginByYears', data: chartYearsTotal });
+        zingchart.render({id: 'contributionMargin{{ year }}', data: chart{{ year }} });
+        zingchart.render({id: 'contributionMarginCompared', data: chartCompared });
+    }
+</script>
+{% endblock javascripts %}
