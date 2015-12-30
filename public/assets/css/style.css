@@ -49,6 +49,13 @@ a:focus {
 	text-decoration: none;
 }
 
+
+.chart-page-header {
+    font-style: italic;
+    font-size: 36px;
+    text-align: center;
+}
+
 /* checkbox */
 
 .checkbox.checkbox-theme label {

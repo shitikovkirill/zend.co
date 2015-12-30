@@ -44,7 +44,7 @@
 <!-- BEGIN HEADER -->
 {% block header %}
 <header>
-    <a href="index.html" class="logo"><i class="ion-ios-bolt"></i> <span>Maniac</span></a>
+    <a href="{{ url('myeconomic') }}" class="logo"><span>E-conomic</span></a>
     <nav class="navbar navbar-static-top">
         <a href="#" class="navbar-btn sidebar-toggle">
             <span class="icon-bar"></span>
@@ -72,9 +72,34 @@
             <div class="title">Navigation</div>
             <ul class="nav-sidebar">
                 {% block navigation %}
+                    <li>
+                        <a href="{{ url('myeconomic', {'action': 'main'}) }}">
+                            <i class="ion-home"></i> <span>Main</span>
+                        </a>
+                    </li>
                     <li class="active">
-                        <a href="index.html">
-                            <i class="ion-home"></i> <span>Dashboard</span>
+                        <a href="{{ url('myeconomic', {'action': 'turnover'}) }}">
+                            <i class="ion-home"></i> <span>Turnover</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url('myeconomic', {'action': 'contributionMargin'}) }}">
+                            <i class="ion-home"></i> <span>Contribution Margin</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url('myeconomic', {'action': 'contributionMarginPercentages'}) }}">
+                            <i class="ion-home"></i> <span>Contribution Margin in %</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url('myeconomic', {'action': 'result'}) }}">
+                            <i class="ion-home"></i> <span>Result</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url('myeconomic', {'action': 'profitMargin'}) }}">
+                            <i class="ion-home"></i> <span>Profit Margin</span>
                         </a>
                     </li>
                 {% endblock navigation %}
@@ -87,12 +112,7 @@
     <!-- BEGIN RIGHTSIDE -->
     <div class="rightside bg-grey-100">
         <!-- BEGIN PAGE HEADING -->
-        {% block page_heading %}
-        <div class="page-head bg-grey-100">
-                <h1 class="page-title">Dashboard<small>welcome to maniac administration</small></h1>
-                <div id="bs-daterangepicker" class="btn bg-grey-50 padding-10-20 no-border color-grey-600 pull-right border-radius-25 hidden-xs no-shadow"><i class="ion-calendar margin-right-10"></i> <span></span> <i class="ion-ios-arrow-down margin-left-5"></i></div>
-        </div>
-        {% endblock page_heading %}
+        {% block page_heading %}{% endblock page_heading %}
         <!-- END PAGE HEADING -->
 
         <div class="container-fluid">
@@ -102,7 +122,7 @@
             <!-- BEGIN FOOTER -->
             <footer class="bg-white">
                 <div class="pull-left">
-                    <span class="pull-left margin-right-15">&copy; 2015 Maniac by YAKUZI.</span>
+                    <span class="pull-left margin-right-15">&copy; 2015 E-conomic Dashboards</span>
                     <ul class="list-inline pull-left">
                         <li><a href="#">Privacy Policy</a></li>
                         <li><a href="#">Terms of Use</a></li>
@@ -121,7 +141,6 @@
 <!-- BEGIN CORE PLUGINS -->
 <script src="{{ basePath() }}/assets/plugins/jquery-1.11.1.min.js" type="text/javascript"></script>
 <script src="{{ basePath() }}/assets/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
-<script src="{{ basePath() }}/assets/plugins/bootstrap/js/holder.js"></script>
 <script src="{{ basePath() }}/assets/plugins/pace/pace.min.js" type="text/javascript"></script>
 <script src="{{ basePath() }}/assets/plugins/slimScroll/jquery.slimscroll.min.js" type="text/javascript"></script>
 <script src="{{ basePath() }}/assets/js/core.js" type="text/javascript"></script>
@@ -139,30 +158,24 @@
 <script src="{{ basePath() }}/assets/plugins/bootstrap-daterangepicker/moment.min.js" type="text/javascript"></script>
 <script src="{{ basePath() }}/assets/plugins/bootstrap-daterangepicker/daterangepicker.js" type="text/javascript"></script>
 
-<!-- vectormap -->
-<script src="{{ basePath() }}/assets/plugins/jquery-jvectormap/jquery-jvectormap-1.2.2.min.js" type="text/javascript"></script>
-<script src="{{ basePath() }}/assets/plugins/jquery-jvectormap/jquery-jvectormap-europe-merc-en.js" type="text/javascript"></script>
-
 <!-- counter -->
 <script src="{{ basePath() }}/assets/plugins/jquery-countTo/jquery.countTo.js" type="text/javascript"></script>
-
-<!-- rickshaw -->
-<script src="{{ basePath() }}/assets/plugins/rickshaw/vendor/d3.v3.js" type="text/javascript"></script>
-<script src="{{ basePath() }}/assets/plugins/rickshaw/rickshaw.min.js" type="text/javascript"></script>
 
 <!-- maniac -->
 <script src="{{ basePath() }}/assets/js/maniac.js" type="text/javascript"></script>
 
 <!-- dashboard -->
 <script type="text/javascript">
-    maniac.loadchart();
+/*    maniac.loadchart();
     maniac.loadvectormap();
     maniac.loadbsslider();
     maniac.loadrickshaw();
     maniac.loadcounter();
     maniac.loadprogress();
-    maniac.loaddaterangepicker();
+    maniac.loaddaterangepicker();*/
 </script>
+
+<script src="http://cdn.zingchart.com/zingchart.min.js"></script>
 {% block javascripts %}{% endblock javascripts %}
 <!-- END JAVASCRIPTS -->
 </body>
