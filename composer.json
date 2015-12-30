@@ -19,8 +19,10 @@
         "zf-commons/zfc-base": "^0.1.2",
         "zf-commons/zfc-twig": "dev-master",
 	    "zf-commons/zfc-admin":"dev-master",
-        "fabiopaiva/zfc-user-crud":"dev-master",
         "hrevert/ht-profile-image": "2.3.*",
-        "hrevert/ht-img-module": ">=0.1.3,<0.4"
+        "hrevert/ht-img-module": ">=0.1.3,<0.4",
+        "goalio/goalio-mailservice": "1.*",
+        "goalio/goalio-forgotpassword": "1.*",
+        "goalio/goalio-forgotpassword-doctrine-orm": "1.*"
     }
 }

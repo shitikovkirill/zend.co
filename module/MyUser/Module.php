@@ -26,8 +26,18 @@ class Module
             $user = $e->getParam('user');
             $em = $mvcEvent->getApplication()->getServiceManager()->get('doctrine.entitymanager.orm_default');
             $config = $mvcEvent->getApplication()->getServiceManager()->get('config');
-            $defaultUserRole = $em->getRepository('ZfcUserCrud\Entity\Role')->findOneBy(array('roleId' => $config['bjyauthorize']['authenticated_role']));
+            $defaultUserRole = $em->getRepository('MyUser\Entity\Role')->findOneBy(array('roleId' => $config['bjyauthorize']['authenticated_role']));
             $user->addRole($defaultUserRole);
         });
+    }
+    public function getServiceConfig() {
+        return array(
+            'factories' => array(
+                'usercrud_options' => function ($sm) {
+                    $config = $sm->get('Config');
+                    return $config['usercrud'];
+                }
+            )
+        );
     }
 }

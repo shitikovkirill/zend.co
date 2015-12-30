@@ -1,4 +1,5 @@
 nbproject
+data/DoctrineORMModule
 ._*
 .vagrant
 .~lock.*
@@ -10,3 +11,4 @@ nbproject
 composer.lock
 vendor
 composer.phar
+HTML

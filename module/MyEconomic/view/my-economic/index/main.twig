@@ -1,0 +1,96 @@
+{% extends 'layout/layout.twig' %}
+
+{% block page_heading %}
+    <div class="chart-page-header">Dashboards Main Page</div>
+{% endblock page_heading %}
+
+{% block content %}
+<div class="row">
+    <div class="col-sm-6">
+        <div id="turnover" style="height: 300px; width: 100%;"></div>
+    </div>
+    <div class="col-sm-6">
+        <div id="contributionMargin" style="height: 300px; width: 100%;"></div>
+    </div>
+    <div class="col-sm-6">
+        <div id="result" style="height: 300px; width: 100%;"></div>
+    </div>
+</div>    
+{% endblock %}
+
+{% block javascripts %}
+<script type="text/javascript">
+    window.onload = function () {
+
+        var chartTurnover = {
+            "type": "bar",
+            "backgroundColor": "#f5f5f5",
+            "title":{
+                "text": "Turnover: {{ turnoverTotal }}"
+            },
+            "scale-x":{
+                "labels":[
+                    {% for key, value in turnover %}
+                        "{{ key }}",
+                    {% endfor %}
+                ]
+            },
+            "series": [
+                { "values": [
+                    {% for value in turnover %}
+                        {{ value }},
+                    {% endfor %}
+                ] },
+            ]
+        };
+
+        var chartContributionMargin = {
+            "type": "bar",
+            "backgroundColor": "#f5f5f5",
+            "title":{
+                "text": "Contribution Margin: {{ contributionMarginTotal }}"
+            },
+            "scale-x":{
+                "labels":[
+                    {% for key, value in contributionMargin %}
+                        "{{ key }}",
+                    {% endfor %}
+                ]
+            },
+            "series": [
+                { "values": [
+                    {% for value in contributionMargin %}
+                        {{ value }},
+                    {% endfor %}
+                ] },
+            ]
+        };
+
+        var chartResult = {
+            "type": "bar",
+            "backgroundColor": "#f5f5f5",
+            "title":{
+                "text": "Result: {{ resultTotal }}"
+            },
+            "scale-x":{
+                "labels":[
+                    {% for key, value in result %}
+                        "{{ key }}",
+                    {% endfor %}
+                ]
+            },
+            "series": [
+                { "values": [
+                    {% for value in result %}
+                        {{ value }},
+                    {% endfor %}
+                ] },
+            ]
+        };
+
+        zingchart.render({id: 'turnover', data: chartTurnover });
+        zingchart.render({id: 'contributionMargin', data: chartContributionMargin });
+        zingchart.render({id: 'result', data: chartResult });
+    }
+</script>
+{% endblock javascripts %}

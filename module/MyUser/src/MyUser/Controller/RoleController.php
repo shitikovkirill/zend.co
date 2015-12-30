@@ -1,15 +1,14 @@
 <?php
 
-namespace ZfcUserCrud\Controller;
+namespace MyUser\Controller;
 
+use MyUser\Forms\RoleFilter;
+use MyUser\Forms\RoleForm;
 use Zend\Mvc\Controller\AbstractActionController;
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
 use Zend\Paginator\Paginator;
-use Zend\Form\Form;
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
-use Zend\InputFilter\InputFilter;
-use Zend\Crypt\Password\Bcrypt;
 use ZfcUser\Options\UserServiceOptionsInterface;
 
 class RoleController extends AbstractActionController {
@@ -25,7 +24,7 @@ class RoleController extends AbstractActionController {
     }
 
     public function indexAction() {
-        $config = $this->getServiceLocator()->get('zfcusercrud_options');
+        $config = $this->getServiceLocator()->get('usercrud_options');
         $query = $this
                 ->getOM()
                 ->getRepository($config['roleEntity'])
@@ -52,7 +51,10 @@ class RoleController extends AbstractActionController {
 
     public function newAction() {
         $translator = $this->getServiceLocator()->get('translator');
-        $form = $this->getForm();
+        $form = new RoleForm($this->getOM());
+        $filter = new RoleFilter();
+        $form->setInputFilter($filter);
+
         if ($this->getRequest()->isPost()) {
             $form->setData($this->getRequest()->getPost());
             if ($form->isValid()) {
@@ -60,7 +62,7 @@ class RoleController extends AbstractActionController {
                 $this->getOM()->persist($role);
                 $this->getOM()->flush();
                 $this->flashMessenger()->addSuccessMessage($translator->translate('Role saved'));
-                $this->redirect()->toRoute('zfc-user-crud-role');
+                $this->redirect()->toRoute('user-crud-role');
             }
         }
         $form->prepare();
@@ -71,13 +73,18 @@ class RoleController extends AbstractActionController {
 
     public function editAction() {
         $translator = $this->getServiceLocator()->get('translator');
-        $config = $this->getServiceLocator()->get('zfcusercrud_options');
-        $form = $this->getForm();
+        $config = $this->getServiceLocator()->get('usercrud_options');
+
         $role = $this
                 ->getOM()
                 ->getRepository($config['roleEntity'])
                 ->find($this->params()->fromRoute('id'));
+
+        $form = new RoleForm($this->getOM(), $role);
+        $filter = new RoleFilter();
+        $form->setInputFilter($filter);
         $form->bind($role);
+
         if ($this->getRequest()->isPost()) {
             $form->setData($this->getRequest()->getPost());
             if ($form->isValid()) {
@@ -85,7 +92,7 @@ class RoleController extends AbstractActionController {
                 $this->getOM()->persist($role);
                 $this->getOM()->flush();
                 $this->flashMessenger()->addSuccessMessage($translator->translate('Role updated'));
-                $this->redirect()->toRoute('zfc-user-crud-role');
+                $this->redirect()->toRoute('user-crud-role');
             }
         }
         $form->prepare();
@@ -96,7 +103,7 @@ class RoleController extends AbstractActionController {
 
     public function removeAction() {
         $translator = $this->getServiceLocator()->get('translator');
-        $config = $this->getServiceLocator()->get('zfcusercrud_options');
+        $config = $this->getServiceLocator()->get('usercrud_options');
         $id = $this->params()->fromRoute('id');
         $entity = $this
                 ->getOM()
@@ -105,61 +112,6 @@ class RoleController extends AbstractActionController {
         $this->getOM()->remove($entity);
         $this->getOM()->flush();
         $this->flashMessenger()->addSuccessMessage($translator->translate('Role removed'));
-        $this->redirect()->toRoute('zfc-user-crud-role');
+        $this->redirect()->toRoute('user-crud-role');
     }
-
-    private function getForm() {
-        $translator = $this->getServiceLocator()->get('translator');
-        $config = $this->getServiceLocator()->get('zfcusercrud_options');
-        $role = new $config['roleEntity'];
-        $form = new Form('role');
-        $form
-                ->setAttribute('class', 'form-horizontal')
-                ->setHydrator(new DoctrineHydrator($this->getOM(),'MyUser\Entity\Role'))
-                ->setObject($role)
-                ->add(array(
-                    'name' => 'roleId',
-                    'options' => array(
-                        'label' => $translator->translate('Role')
-                    ),
-                    'attributes' => array(
-                        'class' => 'form-control input-sm',
-                    )
-                ))
-                ->add(array(
-                    'name' => 'parent',
-                    'type' => 'DoctrineModule\Form\Element\ObjectSelect',
-                    'options' => array(
-                        'label' => $translator->translate('Parent Role'),
-                        'object_manager' => $this->getOM(),
-                        'target_class' => $config['roleEntity'],
-                        'property' => 'roleId',
-                        'empty_option' => 'None'
-                    ),
-                ))
-                ->add(array(
-                    'name' => 'save',
-                    'type' => 'submit',
-                    'attributes' => array(
-                        'value' => 'Save',
-                        'class' => 'btn btn-sm btn-success'
-                    )
-        ));
-
-        $filter = new InputFilter();
-        $filter
-                ->add(array(
-                    'name' => 'roleId',
-                    'required' => true
-                ))
-                ->add(array(
-                    'name' => 'parent',
-                    'required' => false
-                ))
-        ;
-        $form->setInputFilter($filter);
-
-        return $form;
-    }
-
 }

@@ -1,0 +1,12 @@
+    <div class="nav-profile">
+        <div class="thumb">
+            <img src="/htimg/htprofileimage_display/user/{{ img }}" class="img-circle" alt="" />
+            {% if info %}
+            <span class="label label-danger label-rounded">{{ info }}</span>
+            {% endif %}
+        </div>
+        <div class="info">
+            <a href="/user">{{ name }}</a>
+        </div>
+        <a href="/user/logout" class="button"><i class="ion-log-out"></i></a>
+    </div>
