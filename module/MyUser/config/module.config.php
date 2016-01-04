@@ -106,5 +106,8 @@ return array(
         'template_path_stack' => array(
             'MyUser' => __DIR__ . '/../view',
         ),
+        'template_map' => [
+            'zfc-user/user/index' =>  __DIR__ . '/../view/zfc-user/user/index.phtml'
+        ]
     ),
 );

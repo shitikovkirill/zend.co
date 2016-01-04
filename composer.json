@@ -23,6 +23,8 @@
         "hrevert/ht-img-module": ">=0.1.3,<0.4",
         "goalio/goalio-mailservice": "1.*",
         "goalio/goalio-forgotpassword": "1.*",
-        "goalio/goalio-forgotpassword-doctrine-orm": "1.*"
+        "goalio/goalio-forgotpassword-doctrine-orm": "1.*",
+        "goalio/goalio-rememberme": "1.*",
+        "goalio/goalio-rememberme-doctrine-orm": "1.*"
     }
 }

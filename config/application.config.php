@@ -19,6 +19,8 @@ return array(
         'GoalioMailService',
         'GoalioForgotPassword',
         'GoalioForgotPasswordDoctrineORM',
+        'GoalioRememberMe',
+        'GoalioRememberMeDoctrineORM',
         'BjyAuthorize',
         'ZfcAdmin',
         'ZfcTwig',

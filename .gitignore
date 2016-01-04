@@ -11,3 +11,6 @@ data/DoctrineORMModule
 composer.lock
 vendor
 composer.phar
+*.log
+data/uploads/profile-images/
+public/htimg/htprofileimage_display/user
