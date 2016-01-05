@@ -110,13 +110,13 @@ return [
             ]
         ],
         'img_source_path_stack' => [
-            'data/images/',
+            'data/uploads/images',
             'module/Application/data/images',
             // and so on
         ],
         'img_source_map' => [
-            'my/special/image' => 'path/to/my/special/image',
-            'another/special/image' => 'path/to/another/special/image',
+            'my/special/image' => 'data/uploads/specialimage',
+            'another/special/image' => 'data/uploads/specialimage',
             // and so on
         ]
     ]

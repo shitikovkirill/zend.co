@@ -13,7 +13,7 @@ $settings = array(
      * Name of Entity class to use. Useful for using your own entity class
      * instead of the default one provided. Default is ZfcUser\Entity\User.
      */
-    'remember_me_entity_class' => 'GoalioRememberMe\Entity\RememberMe',
+    'remember_me_entity_class' => 'GoalioRememberMeDoctrineORM\Entity\RememberMe',
 
     /**
      * Remember me cookie expire time

@@ -1,0 +1,12 @@
+<?php
+
+return array(
+    'zfctwig' => [
+        'extensions' => [
+            'Twig_Extension_Debug',
+        ],
+        'environment_options' => [
+            'debug'         => true
+        ]
+    ],
+);
