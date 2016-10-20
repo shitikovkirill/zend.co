@@ -25,6 +25,8 @@ return array(
         'ZfcAdmin',
         'ZfcTwig',
         'MyUser',
+        'MtMail',
+        'HtUserRegistration',
         'Application',
     ),
 

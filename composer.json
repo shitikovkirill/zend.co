@@ -25,6 +25,8 @@
         "goalio/goalio-forgotpassword": "1.*",
         "goalio/goalio-forgotpassword-doctrine-orm": "1.*",
         "goalio/goalio-rememberme": "1.*",
-        "goalio/goalio-rememberme-doctrine-orm": "1.*"
+        "goalio/goalio-rememberme-doctrine-orm": "1.*",
+        "hrevert/ht-user-registration": "0.0.*",
+        "mtymek/mt-mail":"1.1.*"
     }
 }
